@@ -1,0 +1,45 @@
+TODO:
+
+work on formatted output in chart style instead of title: info repeating
+
+create text user interface
+    -displays command menu
+    -prompts user for command
+    -calls method based on command           (like NameFileApp)
+    -methods:
+        add (add food item to file; prompts for all stats; validate unit choices? enum? probably!)
+        remove (remove food item from file, based on name; remove all with name or first? probably!)
+        view (view all in file)
+        search (search for foods containing keyword in name?)
+      
+
+add in text user interface delete() functionality to see how many items have a name
+and to ask user to delete all or not? prob need a search method before this
+        
+        
+
+
+-add functionality to do math with food stats
+    eg. enter food name to choose food, then enter how many units to display
+    so if I enter oats then 80, it'll display macros for 80g instead of a serving size
+
+-figure out GUI???
+
+-crazy functionality that allows me to calculate my daily macros and shish
+    
+DONE:
+
+
+create food item class
+    -create fields
+    -create getters for all fields
+    -create setters for all fields
+    
+create file access class (implements DAO)
+
+create DAO interface
+    -getAll: reads file and puts each food item on a list, returns list
+    -add: adds a new food item to file (specifically: writes food item to list then runs save() )
+    -delete: deletes a food item from file if it exists (specifically: removes food item from list if it's on list then 
+        runs save() )
+    -save: writes all food items in list to file
