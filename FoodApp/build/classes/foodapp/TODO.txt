@@ -2,19 +2,11 @@ TODO:
 
 work on formatted output in chart style instead of title: info repeating
 
-create text user interface
-    -displays command menu
-    -prompts user for command
-    -calls method based on command           (like NameFileApp)
-    -methods:
-        add (add food item to file; prompts for all stats; validate unit choices? enum? probably!)
-        remove (remove food item from file, based on name; remove all with name or first? probably!)
-        view (view all in file)
-        search (search for foods containing keyword in name?)
-      
+-prices and grocery functionality
 
-add in text user interface delete() functionality to see how many items have a name
-and to ask user to delete all or not? prob need a search method before this
+-somehow pull info from online for macros instead of manually entering? LOL
+
+
         
         
 
@@ -43,3 +35,19 @@ create DAO interface
     -delete: deletes a food item from file if it exists (specifically: removes food item from list if it's on list then 
         runs save() )
     -save: writes all food items in list to file
+
+create text user interface
+    **-displays command menu
+    **-prompts user for command
+    **-calls method based on command           (like NameFileApp)
+    -methods:
+        **add (add food item to file; prompts for all stats; validate unit choices? enum? probably!)
+        **remove (remove food item from file, based on name; remove all with name or first? probably!)
+        **view (view all in file)
+        **search (search for foods containing keyword in name?)
+
+**search functionality needs to be less specific
+      
+
+**add in text user interface delete() functionality to see how many items have a name
+**and to ask user to delete all or not? prob need a **search method before this

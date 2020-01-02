@@ -9,7 +9,7 @@ package foodapp;
  *
  * @author colin
  */
-public class FoodItem {
+public class FoodItem implements Comparable {
     private String name;
     private String servingSize;
     private String unit;
@@ -39,6 +39,42 @@ public class FoodItem {
         this.protein = protein;
         this.fiber = fiber;
         this.sugar = sugar;
+    }
+    
+    /*
+    returns a String of all info of FoodItem, each stat labelled and
+    on a new line
+    */
+    @Override
+    public String toString(){
+        String foodStr = "Name: " +name+ "\nServing Size: " +servingSize+
+                "\nUnit of measure: " +unit+ "\nCalories: " +calories+ "\nCarbs: "
+                +carbs+ "\nFat: " +fat+ "\nProtein: " +protein+ "\nFiber: " +fiber+
+                "\nSugar: " +sugar;
+        return foodStr;
+    }
+    
+    
+    /*
+    returns 0 if both FoodItems have the same values entirely
+    returns -1 if there is a difference somewhere
+    */
+    @Override
+    public int compareTo(Object o) {
+        
+        FoodItem f = (FoodItem) o;
+        
+        //if all attributes are the same
+        if (f.getName().equals(this.getName()) && f.getCalories().equals(this.getCalories())
+                && f.getServingSize().equals(this.getServingSize()) && f.getUnit().equals(this.getUnit())
+                && f.getCarbs().equals(this.getCarbs()) && f.getFat().equals(this.getFat())
+                && f.getProtein().equals(this.getProtein()) && f.getFiber().equals(this.getFiber())
+                && f.getSugar().equals(this.getSugar())){
+            return 0;
+        }
+        
+        return -1;
+        
     }
     
     public String getName(){
@@ -112,4 +148,5 @@ public class FoodItem {
     public void setSugar(String sugar){
         this.sugar = sugar;
     }
+
 }

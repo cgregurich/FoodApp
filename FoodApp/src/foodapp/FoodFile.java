@@ -134,6 +134,38 @@ public class FoodFile implements DAO<FoodItem> {
         return true;
     }
     
+    /*
+    removes the FoodItem at the param index in foodItemsList
+    returns true if possible
+    returns false if not
+    */
+    public boolean deleteByIndex(int index){
+        if (this.foodItemsList.remove(index) != null){
+            save();
+            return true;
+        }
+        return false;
+        
+    }
+    
+    
+    /*
+    returns index of param food's value equivalent in foodItemsList if it exists
+    if not, -1 is returned
+    */
+    public int indexOfExactFood(FoodItem food){
+        
+        for (FoodItem f : this.foodItemsList){
+            
+            //if food and f have same values, index of f is returned
+            if (food.compareTo(f) == 0){
+                return this.foodItemsList.indexOf(f);
+            }
+        }
+        return -1;
+    }
+    
+    
     
     /*
     checks whether a FoodItem with same name as param foodItem exists within
@@ -149,6 +181,45 @@ public class FoodFile implements DAO<FoodItem> {
         }
         //returns -1 if no food item shares the name
         return -1;
+    }
+   
+    
+    /*
+    iterates through foodItemsList, if current FoodItem's name contains the
+    param keyword, current FoodItem is added to return list
+    list is returned
+    */
+    public List<FoodItem> searchAll(String keyword){
+        ArrayList<FoodItem> foundFoodItemsList = new ArrayList<>();
+        for (FoodItem f : this.foodItemsList){
+            if (f.getName().toLowerCase().contains(keyword.toLowerCase())){
+                foundFoodItemsList.add(f);
+            }
+        }
+        return foundFoodItemsList;
+    }
+    
+    /*
+    iterates through foodItemsList, if current FoodItem's name equals the param
+    keyword (not case sensitive), current FoodItem is added to return list
+    list is returned
+    */
+    public List<FoodItem> searchAllExact(String name){
+        ArrayList<FoodItem> foundFoodItemsList = new ArrayList<>();
+        for (FoodItem f : this.foodItemsList){
+            if (f.getName().toLowerCase().equals(name.toLowerCase())){
+                foundFoodItemsList.add(f);
+            }
+        }
+        return foundFoodItemsList;
+    }
+    
+    
+    /*
+    returns a Food Item from this.foodItemsList based on index in foodItemsList
+    */
+    public FoodItem getFood(int indexOfFoodItem){
+       return this.foodItemsList.get(indexOfFoodItem);
     }
 
     /*
