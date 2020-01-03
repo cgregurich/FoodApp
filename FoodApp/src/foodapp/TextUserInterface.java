@@ -45,6 +45,7 @@ public class TextUserInterface {
         
         System.out.print("\nCommand: ");
         String userCommand = sc.nextLine().toLowerCase();
+        System.out.println("");
         
         switch (userCommand){
             case "add":
@@ -64,13 +65,12 @@ public class TextUserInterface {
                 break;
 
             case "help":
-                System.out.println("");
                 this.displayMenu();
                 break;
 
 
             case "exit":
-                System.out.println("\nGood bye.");
+                System.out.println("Good bye.");
                 break;
 
             default:
@@ -100,7 +100,6 @@ public class TextUserInterface {
     prints all food items in the list of foodFileDAO
     */
     public void view(){
-        System.out.println("");
         
         //prints all foods
         if (!foodFileDAO.getAll().isEmpty()){
@@ -121,7 +120,7 @@ public class TextUserInterface {
     */
     public boolean search(){
         //prompts user for keyword
-        System.out.print("\nEnter keyword: ");
+        System.out.print("Enter keyword: ");
         String searchedName = sc.nextLine();
         
         
