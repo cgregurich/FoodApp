@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.nio.file.*;
 
 
-/**
+/*
  *
  * @author colin
  */
@@ -263,6 +263,10 @@ public class FoodFile implements DAO<FoodItem> {
         }
     }
     
+    /*
+    dang near useless method brthr
+    but need to refactor some areas of code to use formatted instead of this
+    */
     public void printFile(){
         for (FoodItem f : this.foodItemsList){
             System.out.println("Name: " +f.getName());
@@ -276,6 +280,32 @@ public class FoodFile implements DAO<FoodItem> {
             System.out.println("Sugar: " +f.getSugar());
             System.out.println("");
             
+        }
+    }
+    
+    public void printFileFormatted(){
+        System.out.format("%-15s", "Name");
+        System.out.format("%-14s", "Serving Size");
+        System.out.format("%-6s", "Unit");
+        System.out.format("%-10s", "Calories");
+        System.out.format("%-7s", "Carbs");
+        System.out.format("%-5s", "Fat");
+        System.out.format("%-9s", "Protein");
+        System.out.format("%-7s", "Fiber");
+        System.out.format("%-7s%n", "Sugar");
+        System.out.format("---------------------------------------------"
+                + "-----------------------------------%n");
+        
+        for (FoodItem f : this.foodItemsList){
+            System.out.format("%-15s", f.getName());
+            System.out.format("%-14s", f.getServingSize());
+            System.out.format("%-6s", f.getUnit());
+            System.out.format("%-10s", f.getCalories());
+            System.out.format("%-7s", f.getCarbs() + "g");
+            System.out.format("%-5s", f.getFat() + "g");
+            System.out.format("%-9s", f.getProtein() + "g");
+            System.out.format("%-7s", f.getFiber() + "g");
+            System.out.format("%-7s%n", f.getSugar() + "g");
         }
     }
     

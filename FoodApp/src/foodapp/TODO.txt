@@ -1,6 +1,23 @@
 TODO:
 
-work on formatted output in chart style instead of title: info repeating
+implement formatted output in all areas of the program (delete for example)
+
+functionality to update food info
+    -get update to work (currently duplicates but updates??)
+    -validate user entry in multiple areas
+    -deal with multiple results
+
+WHY DOES UPDATE DUPLICATE????
+
+add cancel functionality to all (if needed) options in the program (to avoid spam input)
+
+
+
+
+
+change output from ss and unit separate to ss and unit combined (example: serving size 32g)
+
+**work on formatted output in chart style instead of title: info repeating
 
 -prices and grocery functionality
 
@@ -51,3 +68,4 @@ create text user interface
 
 **add in text user interface delete() functionality to see how many items have a name
 **and to ask user to delete all or not? prob need a **search method before this
+

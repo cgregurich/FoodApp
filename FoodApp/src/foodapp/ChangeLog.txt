@@ -1,0 +1,5 @@
+1-3-20:
+-added printFileFormatted to FoodFile (prints a formatted chart instead of repetitive info)
+-added method updateFood, updateGetInfo, updateMultipleResults to TextUserInterface
+
+

@@ -63,6 +63,10 @@ public class TextUserInterface {
             case "search":
                 this.search();
                 break;
+                
+            case "update":
+                this.updateGetInfo();
+                break;
 
             case "help":
                 this.displayMenu();
@@ -91,6 +95,7 @@ public class TextUserInterface {
         System.out.println("del - delete a food");
         System.out.println("view - view all foods");
         System.out.println("search - search for a food by name");
+        System.out.println("update - update the info of a food");
         System.out.println("help - display this menu");
         System.out.println("exit - exit the program");
     }
@@ -104,7 +109,7 @@ public class TextUserInterface {
         //prints all foods
         if (!foodFileDAO.getAll().isEmpty()){
             System.out.println("DISPLAYING FOODS\n");
-            foodFileDAO.printFile();
+            foodFileDAO.printFileFormatted();
         }
         
         else{ //no food items in file
@@ -145,6 +150,109 @@ public class TextUserInterface {
         System.out.println("No results found");
         return false;
     }
+    
+    //deals with updating a food
+    public boolean updateFood(FoodItem food){
+        
+        //prompts user for what stat to update
+        System.out.println("What needs to be updated?");
+        System.out.println("name | ss | unit | cals | carbs | fat | protein | fiber | sugar");
+        System.out.print("Enter choice: ");
+        String choice = sc.nextLine().toLowerCase();
+        
+        
+        //prompts user for new stat based on choice
+        switch(choice){
+            case "name":
+                System.out.print("Enter new name: ");
+                food.setName(sc.nextLine());
+                break;
+                
+            case "ss":
+                System.out.print("Enter new serving size: ");
+                food.setServingSize(sc.nextLine());
+                break;
+                
+            case "unit":
+                System.out.print("Enter new unit: ");
+                food.setUnit(sc.nextLine());
+                break;
+                
+            case "cals":
+                System.out.print("Enter new calories: ");
+                food.setCalories(sc.nextLine());
+                break;
+                
+            case "carbs":
+                System.out.print("Enter new carbs: ");
+                food.setCarbs(sc.nextLine());
+                break;
+                
+            case "fat":
+                System.out.print("Enter new fat: ");
+                food.setFat(sc.nextLine());
+                break;
+                
+            case "protein":
+                System.out.print("Enter new protein: ");
+                food.setProtein(sc.nextLine());
+                break;
+                
+            case "fiber":
+                System.out.print("Enter new fiber: ");
+                food.setFiber(sc.nextLine());
+                break;
+                
+            case "sugar":
+                System.out.print("Enter new sugar: ");
+                food.setSugar(sc.nextLine());
+                break;
+                
+            default:
+                System.out.println("\nInvalid input.\n");
+                return updateFood(food);
+        }
+        
+        this.foodFileDAO.save(); //writes new info to file
+
+        
+        
+        return true;
+    }
+    
+    
+    
+    public boolean updateGetInfo(){
+        System.out.print("Enter name of food to be updated: ");
+        String foodNameToUpdate = sc.nextLine().toLowerCase();
+        
+        List<FoodItem> foundFoodItemsList = this.foodFileDAO.searchAllExact(foodNameToUpdate);
+        
+        return updateFood(foundFoodItemsList.get(0)); //index 0 as param for testing!!
+        
+        //TODO implement multiple results as well as input validation
+        
+        
+        //if multiple foods have this name
+        
+        /*
+        if (foundFoodItemsList.size() > 1){
+            return updateMultipleResults(foundFoodItemsList);
+        }
+        */
+        //otherwise only one food with name
+        
+        
+        
+        
+    }
+    
+    
+    /*
+    public boolean updateMultipleResults(List<FoodItem> foundFoodItemsList){
+        
+    }
+    */
     
     
     /*
