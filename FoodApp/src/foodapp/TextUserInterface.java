@@ -67,9 +67,13 @@ public class TextUserInterface {
             case "update":
                 this.updateGetInfo();
                 break;
-
+                
             case "help":
+                System.out.println("");
                 this.displayMenu();
+                break;
+                
+            case "x":
                 break;
 
 
@@ -90,7 +94,8 @@ public class TextUserInterface {
     displays all commands available to the user
     */
     public void displayMenu(){
-        System.out.println("COMMANDS\n");
+        System.out.println("COMMANDS");
+        System.out.println("\n(enter x at any point to return home)\n");
         System.out.println("add - add a new food");
         System.out.println("del - delete a food");
         System.out.println("view - view all foods");
@@ -106,10 +111,12 @@ public class TextUserInterface {
     */
     public void view(){
         
+        List<FoodItem> foodItemsListDAO = this.foodFileDAO.getAll();
+        
         //prints all foods
-        if (!foodFileDAO.getAll().isEmpty()){
+        if (!foodItemsListDAO.isEmpty()){
             System.out.println("DISPLAYING FOODS\n");
-            foodFileDAO.printFileFormatted();
+            foodFileDAO.printFormattedFromList(foodItemsListDAO);
         }
         
         else{ //no food items in file
@@ -127,6 +134,11 @@ public class TextUserInterface {
         //prompts user for keyword
         System.out.print("Enter keyword: ");
         String searchedName = sc.nextLine();
+        
+        
+        if (searchedName.equalsIgnoreCase("x")){
+            return false;
+        }
         
         
         FoodItem searchedFood = new FoodItem(searchedName);
@@ -155,7 +167,7 @@ public class TextUserInterface {
     public boolean updateFood(FoodItem food){
         
         //prompts user for what stat to update
-        System.out.println("What needs to be updated?");
+        System.out.println("\nWhat needs to be updated?");
         System.out.println("name | ss | unit | cals | carbs | fat | protein | fiber | sugar");
         System.out.print("Enter choice: ");
         String choice = sc.nextLine().toLowerCase();
@@ -208,6 +220,9 @@ public class TextUserInterface {
                 food.setSugar(sc.nextLine());
                 break;
                 
+            case "x":
+                return false;
+                
             default:
                 System.out.println("\nInvalid input.\n");
                 return updateFood(food);
@@ -215,8 +230,6 @@ public class TextUserInterface {
         
         this.foodFileDAO.save(); //writes new info to file
 
-        
-        
         return true;
     }
     
@@ -226,61 +239,123 @@ public class TextUserInterface {
         System.out.print("Enter name of food to be updated: ");
         String foodNameToUpdate = sc.nextLine().toLowerCase();
         
+        if (foodNameToUpdate.equalsIgnoreCase("x")){
+            return false;
+        }
+        
         List<FoodItem> foundFoodItemsList = this.foodFileDAO.searchAllExact(foodNameToUpdate);
         
-        return updateFood(foundFoodItemsList.get(0)); //index 0 as param for testing!!
-        
-        //TODO implement multiple results as well as input validation
-        
-        
-        //if multiple foods have this name
-        
-        /*
-        if (foundFoodItemsList.size() > 1){
-            return updateMultipleResults(foundFoodItemsList);
+        if (foundFoodItemsList.isEmpty()){
+            System.out.println("\n" +foodNameToUpdate+ " does not exist.\n");
+            return false;
         }
-        */
-        //otherwise only one food with name
+        
+        //not multiple foods with name
+        if (foundFoodItemsList.size() == 1){
+            //sends only/first item in foundFoodItemsList to updateFood method
+            return updateFood(foundFoodItemsList.get(0));
+        }
+        
+        //otherwise multiple foods with name exist
         
         
-        
-        
+        return updateMultipleResults(foundFoodItemsList); //index 0 as param for testing!!
     }
     
     
+    
     /*
+    method to be called if there are more than one result with the name entered
+    by the user in the method updateGetInfo
+    */
     public boolean updateMultipleResults(List<FoodItem> foundFoodItemsList){
         
+        //all elements will have save name, doesn't matter where name comes from
+        String name = foundFoodItemsList.get(0).getName();
+        
+        //displays all foods with name
+        System.out.println("\nMULTIPLE FOODS WITH NAME" +name+ "FOUND\n");
+        this.foodFileDAO.printFormattedFromList(foundFoodItemsList);
+        System.out.println("");
+        
+        
+        int whichToUpdate = -1;
+        
+        while (whichToUpdate < 1 || whichToUpdate > foundFoodItemsList.size()){
+            System.out.print("Which " +name+ " do you want to update? (enter number): ");
+            String userInput = sc.nextLine();
+            if (userInput.equalsIgnoreCase("x")){
+                return false;
+            }
+            
+            //handles non-number input
+            try{
+                whichToUpdate = Integer.parseInt(userInput);
+            } catch (NumberFormatException e){
+                System.out.println("Invalid input. Please try again.\n");
+                continue;
+            }
+            
+            
+            if (whichToUpdate < 1 || whichToUpdate > foundFoodItemsList.size()){
+                System.out.println("Invalid input. Please try again.\n");
+            }
+        }
+        
+        FoodItem foodItemToUpdate = foundFoodItemsList.get(whichToUpdate - 1);
+        
+        return this.updateFood(foodItemToUpdate);
+        
     }
-    */
     
     
-    /*
-    prompts the user for all foodItem info then creates a new foodItem with
-    those stats, then adds that foodItem to foodFileDAO's foodItemsList/file
-    */
+    
     public boolean addFood(){
-        System.out.print("Name: ");
-        String name = sc.nextLine();
-        System.out.print("Serving size: ");
-        String ss = sc.nextLine();
-        System.out.print("Unit of measure: ");
-        String unit = sc.nextLine();
-        System.out.print("Calories: ");
-        String calories = sc.nextLine();
-        System.out.print("Carbs: ");
-        String carbs = sc.nextLine();
-        System.out.print("Fat: ");
-        String fat = sc.nextLine();
-        System.out.print("Protein: ");
-        String protein = sc.nextLine();
-        System.out.print("Fiber: ");
-        String fiber = sc.nextLine();
-        System.out.print("Sugar: ");
-        String sugar = sc.nextLine();
-        FoodItem newFood = new FoodItem(name, ss, unit, calories, carbs, fat, 
-                protein, fiber, sugar);
-        return this.foodFileDAO.add(newFood);
+        
+        String[] prompts = {"Name", "Serving size", "Unit of measure", "Calories",
+            "Carbs", "Fat", "Protein", "Fiber", "Sugar"};
+        
+        String[] inputsArr = new String[prompts.length];
+        
+        
+        String input;
+        int promptCounter = 0;
+        while (promptCounter < 9){
+            System.out.print(prompts[promptCounter]+ ": ");
+            input = sc.nextLine();
+            
+            
+            if (input.equalsIgnoreCase("x")){
+                return false;
+            }
+            
+            else{
+                inputsArr[promptCounter] = input;
+                promptCounter++;
+            }
+        }
+        
+        String name = inputsArr[0];
+        String ss = inputsArr[1];
+        String unit = inputsArr[2];
+        String cals = inputsArr[3];
+        String carbs = inputsArr[4];
+        String fat = inputsArr[5];
+        String protein = inputsArr[6];
+        String fiber = inputsArr[7];
+        String sugar = inputsArr[8];
+        
+        FoodItem newFood = new FoodItem(name, ss, unit, cals, carbs, fat, protein,
+            fiber, sugar);
+        
+        boolean foodAdded = this.foodFileDAO.add(newFood);
+        
+        if (foodAdded){
+            System.out.println("\n" +name+ " was added.\n");
+            return true;
+        }
+        
+        return false;
     }
     
     
@@ -295,13 +370,17 @@ public class TextUserInterface {
         System.out.print("Enter name of food to be deleted: ");
         String name = sc.nextLine();
         
+        if (name.equalsIgnoreCase("x")){
+            return false;
+        }
+        
         List<FoodItem> foundFoodItemsList = this.foodFileDAO.searchAllExact(name);
         
         //if there is more than 1 food item that has the same name as name
         boolean multipleResults = (foundFoodItemsList.size() > 1);
         
         if (multipleResults){
-            return this.deleteMultipleFoods(foundFoodItemsList, name);
+            return this.deleteMultipleFoods(foundFoodItemsList);
         }
         
         //below code will run if there is only one FoodItem with name
@@ -316,8 +395,6 @@ public class TextUserInterface {
             System.out.println("\n" +name+ " does not exist.");
             return false;
         }
-        
-        
     }
     
     
@@ -328,15 +405,15 @@ public class TextUserInterface {
     if yes then all are deleted and true is returned
     if no then prompts user to enter which one to delete (using numbers)
     */
-    public boolean deleteMultipleFoods(List<FoodItem> foundFoodItemsList, String name){
+    public boolean deleteMultipleFoods(List<FoodItem> foundFoodItemsList){
+        String name = foundFoodItemsList.get(0).getName();
+        
         //prints header if there are multiple results
         System.out.println("\nMULTIPLE FOODS WITH NAME " +name+ " FOUND\n");
 
         //prints all FoodItems in foundFoodItemsList
-        for (FoodItem f : foundFoodItemsList){
-            System.out.println(f);
-            System.out.println("");
-        }
+        this.foodFileDAO.printFormattedFromList(foundFoodItemsList);
+        System.out.println("");
 
 
         String choice = "";
@@ -348,8 +425,13 @@ public class TextUserInterface {
             System.out.print("Delete all results? (y or n): ");
             choice = sc.nextLine().toLowerCase();
             
+            
+            if (choice.equalsIgnoreCase("x")){
+                return false;
+            }
+            
             //if user enters y, deletes all foods
-            if (choice.equals("y")){//delete all
+            else if (choice.equals("y")){//delete all
                 for (FoodItem f : foundFoodItemsList){
                     this.foodFileDAO.delete(f);
                     System.out.println(f.getName()+ " was deleted.");
@@ -360,18 +442,30 @@ public class TextUserInterface {
             else if (choice.equals("n")){ //delete one
 
                 int whichToDelete = -1; //int for which food to delete
-                
-                //highest valid entry; based on frontend, not back end 
-                int maxChoice = foundFoodItemsList.size();
+
 
                 //gets user input for which to delete
-                while (whichToDelete <= 0 || whichToDelete > maxChoice){
+                while (whichToDelete < 1 || whichToDelete > foundFoodItemsList.size()){
                     
                     System.out.print("Delete which one? (enter number): ");
-                    whichToDelete = Integer.parseInt(sc.nextLine());  
                     
-                    if (whichToDelete > maxChoice || whichToDelete < 1){ //input is invalid
+                    String input = sc.nextLine();
+                    
+                    if (input.equalsIgnoreCase("x")){
+                        return false;
+                    }
+                    
+                    //handles non-number input
+                    try{
+                        whichToDelete = Integer.parseInt(input);  
+                    } catch (NumberFormatException e){
                         System.out.println("Invalid input. Please try again.\n");
+                        continue;
+                    }
+                        
+                    
+                    if (whichToDelete > foundFoodItemsList.size() || whichToDelete < 1){ //input is invalid
+                        System.out.println("\nInvalid input. Please try again.\n");
                     }
                 }
                 
@@ -385,10 +479,6 @@ public class TextUserInterface {
                 //prints info to the user about what was deleted
                 System.out.println(name+ " (" +whichToDelete+ ") was deleted." );
                 return wasDeleted;
-                
-                
-                
-                
             }
 
             else{ //invalid choice; not y or n

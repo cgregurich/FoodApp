@@ -1,2 +1,5 @@
-peanut butter	32	g	190	7	16	8	3	2
-new oats	poo	test	100	20	2	4	4	2
+oats	200	g	102	33	32	2	2	2
+x	32	g	190	3	16	5	4	4
+whey	32	g	120	3	0	23	0	3
+cupoats	1	cup	100	30	0	6	3	1
+triple berry	100	g	70	30	0	0	0	23

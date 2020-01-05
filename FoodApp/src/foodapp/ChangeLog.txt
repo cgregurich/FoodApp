@@ -3,3 +3,20 @@
 -added method updateFood, updateGetInfo, updateMultipleResults to TextUserInterface
 
 
+1-4-20:
+-TextUserInterface: update functionality now has validation on multiple levels
+    can deal with multiple results for the given name
+**WHY DOES UPDATE DUPLICATE????:
+    because you were pulling a FoodItem by ref and altering an attribute, then 
+    calling an updateFood method of FoodFile that inserted a new food.
+    thinking that it would insert and replace at param index but instead
+    inserted at index and pushed everything by one.
+**work on formatted output in chart style instead of title: info repeating
+**functionality to update food info
+    **-get update to work (currently duplicates but updates??)
+    -validate user entry in multiple areas
+    -deal with multiple results
+-updated addFood in TextUserInterface to be less repetitive
+-added escape clause to all (i think) functions
+formatted output across the program
+-del and update deal with non number input when asking which multiple result to del/update
