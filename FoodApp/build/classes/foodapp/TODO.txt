@@ -1,5 +1,9 @@
 TODO:
 
+-SPLIT Update into more methods (ugly code rn!)
+
+
+
 MATH FUNCTIONALITY!!!!
 
 -sorting functionality. Sort by name (a-z or z-a) sort by SS (useless?), 
@@ -9,8 +13,6 @@ MATH FUNCTIONALITY!!!!
 
 
 
--give user multiple chances to enter food to delete (when enter name that doesnt exist)
-    idk if necessary
 
 
 
@@ -19,11 +21,8 @@ MATH FUNCTIONALITY!!!!
 
 
 
--change output of multiple results found to formatted ouput
 
 
-
-change output from ss and unit separate to ss and unit combined (example: serving size 32g)
 
 
 
@@ -102,3 +101,17 @@ functionality to update food info
 **-also to avoid having to make a choice eg. deleting one of same name entries (want to delete none!)
 
 **-del and update (which one clause) needs to deal with non number entry
+
+1-6-20
+
+**-change output of multiple search results found to formatted ouput
+
+
+
+**change output from ss and unit separate to ss and unit combined (example: serving size 32g)
+
+**-give user multiple chances to enter food to delete (when enter name that doesnt exist)
+    idk if necessary
+
+**-FIX BUG: when using x clause in update when prompted for new value for stat, 
+    the stat becomes x

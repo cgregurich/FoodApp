@@ -32,8 +32,7 @@ public class FoodFile implements DAO<FoodItem> {
     
 
     /*
-    if foodItemsList is null (i.e. hasn't been touched), the file is read
-    and each foodItem is added to the list
+    GET ALL
     */
     @Override
     public List<FoodItem> getAll() {
@@ -98,8 +97,7 @@ public class FoodFile implements DAO<FoodItem> {
 
     
     /*
-    adds a food item to foodItemsList
-    then runs method save() to write new list to file
+    ADD
     */
     @Override
     public boolean add(FoodItem newFood) {
@@ -116,10 +114,7 @@ public class FoodFile implements DAO<FoodItem> {
     
     
     /*
-    if a foodItem with same name as param food exists in foodItemsList
-    then that foodItem is removed from the list and method save() is called
-    to update the file
-    if not then returns false
+    DELETE
     */
     @Override
     public boolean delete(FoodItem food) {
@@ -150,6 +145,7 @@ public class FoodFile implements DAO<FoodItem> {
     
     
     /*
+    INDEX OF EXACT FOOD
     returns index of param food's value equivalent in foodItemsList if it exists
     if not, -1 is returned
     */
@@ -168,6 +164,7 @@ public class FoodFile implements DAO<FoodItem> {
     
     
     /*
+    EXISTS
     checks whether a FoodItem with same name as param foodItem exists within
     the file / foodItemsList
     returns index of it if it does
@@ -185,6 +182,7 @@ public class FoodFile implements DAO<FoodItem> {
    
     
     /*
+    SEARCH ALL
     iterates through foodItemsList, if current FoodItem's name contains the
     param keyword, current FoodItem is added to return list
     list is returned
@@ -221,6 +219,20 @@ public class FoodFile implements DAO<FoodItem> {
     public FoodItem getFood(int indexOfFoodItem){
        return this.foodItemsList.get(indexOfFoodItem);
     }
+    
+    /*
+    CHECK FOR X
+    */
+    public boolean hasX(){
+        for (FoodItem f : this.foodItemsList){
+            for (String stat : f.getStatsList()){
+                if (stat.equalsIgnoreCase("x"));
+                return true;
+            }
+        }
+        return false;
+    }
+    
 
     /*
     writes each foodItem in foodItemsList to the file
@@ -287,7 +299,6 @@ public class FoodFile implements DAO<FoodItem> {
     public void printFormattedFromList(List<FoodItem> foodItemsListParam){
         System.out.format("%-15s", "Name");
         System.out.format("%-14s", "Serving Size");
-        //System.out.format("%-6s", "Unit");
         System.out.format("%-10s", "Calories");
         System.out.format("%-7s", "Carbs");
         System.out.format("%-5s", "Fat");
@@ -300,7 +311,6 @@ public class FoodFile implements DAO<FoodItem> {
         for (FoodItem f : foodItemsListParam){
             System.out.format("%-15s", f.getName());
             System.out.format("%-14s", f.getServingSize()+ " " +f.getUnit());
-            //System.out.format("%-6s", f.getUnit());
             System.out.format("%-10s", f.getCalories());
             System.out.format("%-7s", f.getCarbs() + "g");
             System.out.format("%-5s", f.getFat() + "g");

@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package foodapp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -20,12 +22,16 @@ public class FoodItem implements Comparable {
     private String fiber;
     private String sugar;
     
+    //list needed to check if a stat == "x" in FoodFile
+    private List<String> statsList = new ArrayList<>(); 
+    
     public FoodItem(){
         
     }
     
     public FoodItem(String name){
         this.name = name;
+        this.statsList.add(name);
     }
     
     public FoodItem(String name, String ss, String unit, String cals, String carbs,
@@ -39,6 +45,7 @@ public class FoodItem implements Comparable {
         this.protein = protein;
         this.fiber = fiber;
         this.sugar = sugar;
+        this.updateList();
     }
     
     /*
@@ -113,40 +120,70 @@ public class FoodItem implements Comparable {
         return this.sugar;
     }
     
+    public boolean updateList(){
+        this.statsList.clear();
+        
+        this.statsList.add(this.name);
+        this.statsList.add(this.servingSize);
+        this.statsList.add(this.unit);
+        this.statsList.add(this.calories);
+        this.statsList.add(this.carbs);
+        this.statsList.add(this.fat);
+        this.statsList.add(this.protein);
+        this.statsList.add(this.fiber);
+        this.statsList.add(this.sugar);
+        
+        return true;
+    }
+    
+    public List<String> getStatsList(){
+        return this.statsList;
+    }
+    
+    
     public void setName(String name){
         this.name = name;
+        this.updateList();
     }
     
     public void setServingSize(String servingSize){
         this.servingSize = servingSize;
+        this.updateList();
     }
     
     public void setUnit(String unit){
         this.unit = unit;
+        this.updateList();
     }
     
     public void setCalories(String calories){
         this.calories = calories;
+        this.updateList();
     }
     
     public void setCarbs(String carbs){
         this.carbs = carbs;
+        this.updateList();
     }
     
     public void setFat(String fat){
         this.fat = fat;
+        this.updateList();
     }
     
     public void setProtein(String protein){
         this.protein = protein;
+        this.updateList();
     }
     
     public void setFiber(String fiber){
         this.fiber = fiber;
+        this.updateList();
     }
     
     public void setSugar(String sugar){
         this.sugar = sugar;
+        this.updateList();
     }
 
 }

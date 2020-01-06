@@ -20,3 +20,11 @@
 -added escape clause to all (i think) functions
 formatted output across the program
 -del and update deal with non number input when asking which multiple result to del/update
+
+1-6-20:
+Search results are now formatted chart output
+Update and Delete now reprompt user when receives bad input
+Chart puts unit on the end of the serving size instead of its own column
+Split Update method into more methods (updateGetChoice, updateGetNewStat).
+    Original updateFood method calls these new methods; cleaner code.
+Renamed updateGetInfo to updateGetFoodToUpdate (more descriptive)
