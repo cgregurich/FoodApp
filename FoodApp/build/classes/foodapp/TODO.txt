@@ -9,13 +9,24 @@ MATH FUNCTIONALITY!!!!
 -sorting functionality. Sort by name (a-z or z-a) sort by SS (useless?), 
     by unit, cals, carbs, fat, etc.
 
+-make a replace method in FoodFileDAO to deal with sorting 
+    maybe even just make pop() from python to return the removed Object
+
 -in the future when prices are added (??) include $ per calories as well as by price.
 
 
 
 
 
+SORTING:
+    -need to deal with converting stats to int if needed, sorting numbers 
+    as strings DOES NOT WORK RIGHT (only looks at first char as a str)
 
+-output food items after sorting (rn user has to call for view again)
+
+-give option of ascending or descending (or a-z / z-a in the case of unit and name)
+
+-add validation for int stats to only take ints (to avoid issues with sorting)
 
 
 

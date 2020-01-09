@@ -28,3 +28,25 @@ Chart puts unit on the end of the serving size instead of its own column
 Split Update method into more methods (updateGetChoice, updateGetNewStat).
     Original updateFood method calls these new methods; cleaner code.
 Renamed updateGetInfo to updateGetFoodToUpdate (more descriptive)
+
+1-8-20:
+Created new Enum Stat
+Created new class FoodItemSorter:
+    (very proud of this class; went from repetition to beauty!!)
+    -method sortStringArray
+    -method sortIntArray
+    -method sortByStat
+    -method convertToIntArray
+    -method popularArrByStat
+FoodItem:
+    -method getStat (beautiful method!)
+    -
+FoodFile:
+    -method sortFile
+    -variable FoodItemSorter sorter
+TextUserInterface:
+    -sort functionality
+    -sort option in displayMenu and userMenuCommand
+    -method sortFoods
+    -method sortFoodsInputCriteria
+    -method convertStringToStat

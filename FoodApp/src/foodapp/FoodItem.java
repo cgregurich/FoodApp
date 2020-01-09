@@ -29,6 +29,41 @@ public class FoodItem implements Comparable {
         
     }
     
+    /*
+    GET STAT
+    */
+    public String getStat(Stat stat){
+        switch(stat){
+            case NAME:
+                return this.name;
+                
+            case SS:
+                return this.servingSize;
+                
+            case UNIT:
+                return this.unit;
+                
+            case CALS:
+                return this.calories;
+                
+            case CARBS:
+                return this.carbs;
+                
+            case FAT:
+                return this.fat;
+                
+            case PROTEIN:
+                return this.protein;
+                
+            case FIBER:
+                return this.fiber;
+                
+            case SUGAR:
+                return this.sugar;
+        }
+        return null;
+    }
+    
     public FoodItem(String name){
         this.name = name;
         this.statsList.add(name);

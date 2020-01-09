@@ -21,6 +21,7 @@ public class FoodFile implements DAO<FoodItem> {
     private File foodItemsFile = null;
     private List<FoodItem> foodItemsList = null; //acts as proxy to the file
     final private String DELIMITER = "\t";
+    private FoodItemSorter sorter = new FoodItemSorter();
     
     
     public FoodFile(){
@@ -94,7 +95,21 @@ public class FoodFile implements DAO<FoodItem> {
         }
         return this.foodItemsList;
     }
-
+    
+    
+    /*
+    SORT FILE
+    */
+    public boolean sortFile(Stat stat){
+        if (this.foodItemsList == null){
+            return false;
+        }
+        this.foodItemsList = sorter.sortByStat(this.foodItemsList, stat);
+        this.save();
+        return true;
+        
+    }
+    
     
     /*
     ADD
@@ -198,9 +213,8 @@ public class FoodFile implements DAO<FoodItem> {
     }
     
     /*
-    iterates through foodItemsList, if current FoodItem's name equals the param
-    keyword (not case sensitive), current FoodItem is added to return list
-    list is returned
+    SEARCH ALL EXACT
+    exact means by total name, non case sensitive
     */
     public List<FoodItem> searchAllExact(String name){
         ArrayList<FoodItem> foundFoodItemsList = new ArrayList<>();
@@ -214,7 +228,7 @@ public class FoodFile implements DAO<FoodItem> {
     
     
     /*
-    returns a Food Item from this.foodItemsList based on index in foodItemsList
+    GET FOOD
     */
     public FoodItem getFood(int indexOfFoodItem){
        return this.foodItemsList.get(indexOfFoodItem);
@@ -235,9 +249,7 @@ public class FoodFile implements DAO<FoodItem> {
     
 
     /*
-    writes each foodItem in foodItemsList to the file
-    works as an "update" to the file
-    this method should be called every time a change to the list occurs
+    SAVE
     */
     @Override
     public boolean save() {
@@ -309,6 +321,34 @@ public class FoodFile implements DAO<FoodItem> {
                 + "-----------------------------------%n");
         
         for (FoodItem f : foodItemsListParam){
+            System.out.format("%-15s", f.getName());
+            System.out.format("%-14s", f.getServingSize()+ " " +f.getUnit());
+            System.out.format("%-10s", f.getCalories());
+            System.out.format("%-7s", f.getCarbs() + "g");
+            System.out.format("%-5s", f.getFat() + "g");
+            System.out.format("%-9s", f.getProtein() + "g");
+            System.out.format("%-7s", f.getFiber() + "g");
+            System.out.format("%-7s%n", f.getSugar() + "g");
+        }
+    }
+    
+    /*
+    for testing
+    PRINT FORMATTED FROM ARRAY
+    */
+    public void printFormattedFromArray(FoodItem[] foods){
+        System.out.format("%-15s", "Name");
+        System.out.format("%-14s", "Serving Size");
+        System.out.format("%-10s", "Calories");
+        System.out.format("%-7s", "Carbs");
+        System.out.format("%-5s", "Fat");
+        System.out.format("%-9s", "Protein");
+        System.out.format("%-7s", "Fiber");
+        System.out.format("%-7s%n", "Sugar");
+        System.out.format("-------------------------------------------"
+                + "-----------------------------------%n");
+        
+        for (FoodItem f : foods){
             System.out.format("%-15s", f.getName());
             System.out.format("%-14s", f.getServingSize()+ " " +f.getUnit());
             System.out.format("%-10s", f.getCalories());

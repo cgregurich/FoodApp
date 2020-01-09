@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package foodapp;
+import static foodapp.Stat.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class TextUserInterface {
     private FoodFile foodFileDAO;
     private Scanner sc = new Scanner (System.in);
+    private FoodItemSorter sorter = new FoodItemSorter();
     
     
     public TextUserInterface(){
@@ -48,6 +50,15 @@ public class TextUserInterface {
         System.out.println("");
         
         switch (userCommand){
+            
+            case "view":
+                this.view();
+                break;
+                
+            case "sort":
+                this.sortFoods();
+                break;
+                
             case "add":
                 this.addFood();
                 break;
@@ -55,17 +66,13 @@ public class TextUserInterface {
             case "del":
                 this.deleteFood();
                 break;
-
-            case "view":
-                this.view();
-                break;
                 
             case "search":
                 this.search();
                 break;
                 
             case "update":
-                this.updateGetFoodToUpdate();
+                this.updateInputFoodToUpdate();
                 break;
                 
             case "help":
@@ -96,9 +103,10 @@ public class TextUserInterface {
     public void displayMenu(){
         System.out.println("COMMANDS");
         System.out.println("\n(enter x at any point to return home)\n");
+        System.out.println("view - view all foods");
+        System.out.println("sort - sort foods by chosen criteria");
         System.out.println("add - add a new food");
         System.out.println("del - delete a food");
-        System.out.println("view - view all foods");
         System.out.println("search - search for a food by name");
         System.out.println("update - update the info of a food");
         System.out.println("help - display this menu");
@@ -138,7 +146,6 @@ public class TextUserInterface {
             return false;
         }
         
-        
         FoodItem searchedFood = new FoodItem(searchedName);
         
         List<FoodItem> foundFoodItemsList = this.foodFileDAO.searchAll(searchedName);
@@ -159,7 +166,7 @@ public class TextUserInterface {
     /*
     UPDATE GET INFO
     */
-    public boolean updateGetFoodToUpdate(){
+    public boolean updateInputFoodToUpdate(){
         
         List<FoodItem> foundFoodItemsList = new ArrayList<>();
         
@@ -207,13 +214,13 @@ public class TextUserInterface {
     public boolean updateFood(FoodItem food){
         
         //takes care of escape clause in updateGetChoice
-        String choice = updateGetChoice();
+        String choice = updateGetUserChoice();
         if (choice == null){
             return false;
         }
         
         //takes care of escape clause in updateGetNewStat
-        String newStat = updateGetNewStat(choice);
+        String newStat = updateInputNewStat(choice);
         if (newStat == null){
             return false;
         }
@@ -269,7 +276,7 @@ public class TextUserInterface {
     /*
     UPDATE GET CHOICE
     */
-    public String updateGetChoice(){
+    public String updateGetUserChoice(){
         //prompts for and validates choice input
         String choice = "";
         boolean isValidChoice = false;
@@ -307,7 +314,7 @@ public class TextUserInterface {
     /*
     UPDATE GET NEW STAT
     */
-    public String updateGetNewStat(String choice){
+    public String updateInputNewStat(String choice){
         
         String newStat;
         
@@ -433,11 +440,7 @@ public class TextUserInterface {
     
     
     /*
-    prompts user for name of food
-    if a food with this name exists in the file, then it is removed
-    
-    **need to add functionality to ask to delete all foods with this name
-    
+    DELETE FOOD
     */
     public boolean deleteFood(){
         System.out.print("Enter name of food to be deleted: ");
@@ -472,11 +475,7 @@ public class TextUserInterface {
     
     
     /*
-    method for deleting when there are multiple FoodItems with the name the 
-    user enters
-    prompts user to either delete all results or not
-    if yes then all are deleted and true is returned
-    if no then prompts user to enter which one to delete (using numbers)
+    DELETE MULTIPLE FOODS
     */
     public boolean deleteMultipleFoods(List<FoodItem> foundFoodItemsList){
         String name = foundFoodItemsList.get(0).getName();
@@ -559,6 +558,79 @@ public class TextUserInterface {
             }
         }
         return false;
+    }
+    
+    
+    
+    /*
+    SORT FOODS
+    */
+    public boolean sortFoods(){
+        String choice = sortFoodsInputCriteria();
+        
+        if (choice == null){
+            return false;
+        }
+        
+        Stat stat = convertStringToStat(choice);
+        this.foodFileDAO.sortFile(stat);
+        //no save call in sortFile yet
+        return true;
+        
+    }
+    
+    /*
+    SORT FOODS INPUT CRITERIA
+    */
+    public String sortFoodsInputCriteria(){
+        String[] criteriaOptions = {"name", "ss", "unit", "cals", "carbs", "fat",
+            "protein", "fiber", "sugar"};
+        
+        boolean isChoiceValid = false;
+        
+        String choice = "";
+        
+        
+        
+        while (!isChoiceValid){
+            System.out.println("Sort by what?");
+            System.out.println("name | ss | cals | carbs | fat | protein | fiber | sugar");
+            System.out.print("Enter choice: ");
+            choice = sc.nextLine().toLowerCase();
+            
+            if (choice.equals("x")){
+                return null;
+            }
+            
+            for (String option : criteriaOptions){
+                if (choice.equals(option)){
+                    isChoiceValid = true;
+                    break;
+                }
+            }
+            if (!isChoiceValid){
+                System.out.println("Invalid entry. Please try again.\n");
+            }
+            else{
+                break;
+            }
+        }
+        
+        return choice;
+    }
+    
+    /*
+    CONVERT STRING TO STAT
+    */
+    public Stat convertStringToStat(String str){
+        Stat stat;
+        try{
+            stat = Stat.valueOf(str.toUpperCase());
+        }catch (Exception e){
+            return null;
+        }
+            
+        return stat;
     }
             
         
