@@ -573,23 +573,58 @@ public class TextUserInterface {
     SORT FOODS
     */
     public boolean sortFoods(){
-        String choice = sortFoodsInputCriteria();
+        String choice = sortFoodsUserInputCriteria();
         
         if (choice == null){
             return false;
         }
         
+        String order = sortFoodsUserInputOrder();
+        if (order == null){
+            return false;
+        }
+        
+        boolean isAscending = order.equals("asc");
+        
+        
+        
         Stat stat = convertStringToStat(choice);
-        this.foodFileDAO.sortFile(stat);
-        //no save call in sortFile yet
+        this.foodFileDAO.sortFile(stat, isAscending);
+        
+        System.out.println("\nSORTED FOODS");
+        this.foodFileDAO.printFormattedFromList(foodFileDAO.getAll());
         return true;
         
     }
     
     /*
-    SORT FOODS INPUT CRITERIA
+    SORT FOODS USER INPUT ORDER
+    
+    have to return a string to allow the escape clause of input of x by user
     */
-    public String sortFoodsInputCriteria(){
+    public String sortFoodsUserInputOrder(){
+        String order = "";
+        while (!(order.equals("asc") || order.equals("desc"))){
+            System.out.println("\nSort ascending or descending?");
+            System.out.print("Enter asc or desc: ");
+            order = sc.nextLine().toLowerCase();
+            
+            if (order.equals("x")){
+                return null;
+            }
+            
+            if (!(order.equals("asc") || order.equals("desc"))){
+                System.out.println("Invalid input. Please try again.");
+            }
+        }
+        
+        return order;
+    }
+    
+    /*
+    SORT FOODS USER INPUT CRITERIA
+    */
+    public String sortFoodsUserInputCriteria(){
         String[] criteriaOptions = {"name", "ss", "unit", "cals", "carbs", "fat",
             "protein", "fiber", "sugar"};
         

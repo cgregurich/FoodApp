@@ -20,19 +20,34 @@ public class FoodItemSorter {
     /*
     SORT STRING ARRAY
     */
-    public String[] sortStringArray(String[] strArr){
+    public String[] sortStringArray(String[] strArr, boolean isAscending){
         String temp;
         int size = strArr.length;
         
-        for (int i = 0; i < size; i++){
-            for (int j = i + 1; j < size; j++){
-                if (strArr[i].compareTo(strArr[j]) > 0){
-                    temp = strArr[i];
-                    strArr[i] = strArr[j];
-                    strArr[j] = temp;
+        if (isAscending){
+            for (int i = 0; i < size; i++){
+                for (int j = i + 1; j < size; j++){
+                    if (strArr[i].compareTo(strArr[j]) > 0){
+                        temp = strArr[i];
+                        strArr[i] = strArr[j];
+                        strArr[j] = temp;
+                    }
                 }
             }
         }
+        
+        else{ //descending
+            for (int i = 0; i < size; i++){
+                for (int j = i + 1; j < size; j++){
+                    if (strArr[i].compareTo(strArr[j]) < 0){
+                        temp = strArr[i];
+                        strArr[i] = strArr[j];
+                        strArr[j] = temp;
+                    }
+                }
+            }
+        }
+            
        
         return strArr;
     }
@@ -40,19 +55,34 @@ public class FoodItemSorter {
     /*
     SORT INT ARRAY
     */
-    public int[] sortIntArray(int[] intArr){
+    public int[] sortIntArray(int[] intArr, boolean isAscending){
         int temp;
         int size = intArr.length;
         
-        for (int i = 0; i < size; i++){
-            for (int j = i + 1; j < size; j++){
-                if (intArr[i] > intArr[j]){
-                    temp = intArr[i];
-                    intArr[i] = intArr[j];
-                    intArr[j] = temp;
+        if(isAscending){
+            for (int i = 0; i < size; i++){
+                for (int j = i + 1; j < size; j++){
+                    if (intArr[i] > intArr[j]){
+                        temp = intArr[i];
+                        intArr[i] = intArr[j];
+                        intArr[j] = temp;
+                    }
                 }
             }
         }
+        
+        else{ //descending
+            for (int i = 0; i < size; i++){
+                for (int j = i + 1; j < size; j++){
+                    if (intArr[i] < intArr[j]){
+                        temp = intArr[i];
+                        intArr[i] = intArr[j];
+                        intArr[j] = temp;
+                    }
+                }
+            }
+        }
+            
         return intArr;
     }
     
@@ -60,7 +90,7 @@ public class FoodItemSorter {
     HOMEBASE FOR SORTING
     SORT BY STAT
     */
-    public List<FoodItem> sortByStat(List<FoodItem> foodItemsList, Stat stat){
+    public List<FoodItem> sortByStat(List<FoodItem> foodItemsList, Stat stat, boolean isAscending){
         List<FoodItem> sortedList;
         
         
@@ -68,7 +98,7 @@ public class FoodItemSorter {
         if (stat == NAME || stat == UNIT){
             //firstArr exists just for cleanlieness of code
             String[] firstArr = populateArrByStat(foodItemsList, stat);
-            String[] sortedArr = sortStringArray(firstArr);
+            String[] sortedArr = sortStringArray(firstArr, isAscending);
 
             sortedList = new ArrayList<>();
 
@@ -86,7 +116,7 @@ public class FoodItemSorter {
         else{ //stat is something of int value
             String[] strArr = populateArrByStat(foodItemsList, stat);
             int[] firstArr = convertToIntArray(strArr);
-            int[] sortedArr = sortIntArray(firstArr);
+            int[] sortedArr = sortIntArray(firstArr, isAscending);
 
             sortedList = new ArrayList<>();
 

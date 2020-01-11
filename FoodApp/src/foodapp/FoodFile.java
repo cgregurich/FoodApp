@@ -100,14 +100,15 @@ public class FoodFile implements DAO<FoodItem> {
     /*
     SORT FILE
     */
-    public boolean sortFile(Stat stat){
+    public boolean sortFile(Stat stat, boolean isAscending){
         if (this.foodItemsList == null){
             return false;
         }
-        this.foodItemsList = sorter.sortByStat(this.foodItemsList, stat);
+        
+        
+        this.foodItemsList = sorter.sortByStat(this.foodItemsList, stat, isAscending);
         this.save();
         return true;
-        
     }
     
     
@@ -306,6 +307,9 @@ public class FoodFile implements DAO<FoodItem> {
     }
     
     
+    /*
+    PRINT FORMATTED FROM LIST
+    */
     public void printFormattedFromList(List<FoodItem> foodItemsListParam){
         System.out.format("%-15s", "Name");
         System.out.format("%-14s", "Serving Size");
