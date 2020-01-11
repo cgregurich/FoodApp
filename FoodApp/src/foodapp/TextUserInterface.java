@@ -498,69 +498,76 @@ public class TextUserInterface {
             choice = sc.nextLine().toLowerCase();
             
             
-            if (choice.equalsIgnoreCase("x")){
-                return false;
-            }
-            
-            //if user enters y, deletes all foods
-            else if (choice.equals("y")){//delete all
-                for (FoodItem f : foundFoodItemsList){
-                    this.foodFileDAO.delete(f);
-                    System.out.println(f.getName()+ " was deleted.");
-                }
-            }
-
-            //if user enters n, then they only want to delete one
-            else if (choice.equals("n")){ //delete one
-
-                int whichToDelete = -1; //int for which food to delete
-
-
-                //gets user input for which to delete
-                while (whichToDelete < 1 || whichToDelete > foundFoodItemsList.size()){
+            switch(choice){
+                case "x":
+                    return false;
                     
-                    System.out.print("Delete which one? (enter number): ");
+                case "y":
+                    return deleteMultipleFoodsDeleteAll(foundFoodItemsList);
                     
-                    String input = sc.nextLine();
+                case "n":
+                    return deleteMultipleFoodsChoose(foundFoodItemsList);
                     
-                    if (input.equalsIgnoreCase("x")){
-                        return false;
-                    }
-                    
-                    //handles non-number input
-                    try{
-                        whichToDelete = Integer.parseInt(input);  
-                    } catch (NumberFormatException e){
-                        System.out.println("Invalid input. Please try again.\n");
-                        continue;
-                    }
-                        
-                    
-                    if (whichToDelete > foundFoodItemsList.size() || whichToDelete < 1){ //input is invalid
-                        System.out.println("\nInvalid input. Please try again.\n");
-                    }
-                }
-                
-                
-                //int for the index of the food to delete in foodFileDAO's list
-                int indexOfFoodInDAO = this.foodFileDAO.indexOfExactFood(foundFoodItemsList.get(whichToDelete - 1));
-                
-                //calls deleteByIndex and sets the return to a boolean
-                boolean wasDeleted = this.foodFileDAO.deleteByIndex(indexOfFoodInDAO);
-                
-                //prints info to the user about what was deleted
-                System.out.println(name+ " (" +whichToDelete+ ") was deleted." );
-                return wasDeleted;
-            }
-
-            else{ //invalid choice; not y or n
-                System.out.println("Invalid input. Please try again.\n");
+                default:
+                    System.out.println("Invalid input. Please try again.\n");
             }
         }
         return false;
     }
     
+    /*
+    DELETE MULTIPLE FOODS DELETE ALL
+    */
+    public boolean deleteMultipleFoodsDeleteAll(List<FoodItem> foundFoodItemsList){
+        if (foundFoodItemsList == null){
+            return false;
+        }
+        
+        for (FoodItem f : foundFoodItemsList){
+            this.foodFileDAO.delete(f);
+            System.out.println(f.getName()+ " was deleted.");
+        }
+        return true;
+    }
     
+    /*
+    DELETE MULTIPLE FOODS CHOOSE
+    */
+    public boolean deleteMultipleFoodsChoose(List<FoodItem> foundFoodItemsList){
+        
+        int whichToDelete = -1;
+        String name = foundFoodItemsList.get(0).getName();
+        
+        while (whichToDelete < 1 || whichToDelete > foundFoodItemsList.size()){
+            
+            System.out.print("Delete which one? (enter number): ");
+            String input = sc.nextLine();
+            
+            if (input.equalsIgnoreCase("x")){
+                return false;
+            }
+            
+           
+            try{
+                whichToDelete = Integer.parseInt(input);
+            } catch(NumberFormatException e){
+                System.out.println("Invalid input. Please try again.\n");
+                continue;
+            }
+            
+            if (whichToDelete > foundFoodItemsList.size() || whichToDelete < 1){
+                System.out.println("\nInvalid input. Please try again.\n");
+            }
+            
+            int indexOfFoodInDAO = this.foodFileDAO.indexOfExactFood(foundFoodItemsList.get(whichToDelete - 1));
+            
+            this.foodFileDAO.deleteByIndex(indexOfFoodInDAO);
+            
+            System.out.println(name+ " was deleted.");
+            return true;
+        }
+        return false;                
+    }
     
     /*
     SORT FOODS

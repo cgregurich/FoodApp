@@ -1,7 +1,10 @@
 TODO:
 
+
+
 -SPLIT Update into more methods (ugly code rn!)
 
+-split deleteMultipleFoods into multiple methods
 
 
 MATH FUNCTIONALITY!!!!
@@ -19,7 +22,7 @@ MATH FUNCTIONALITY!!!!
 
 
 SORTING:
-    -need to deal with converting stats to int if needed, sorting numbers 
+    *?-need to deal with converting stats to int if needed, sorting numbers 
     as strings DOES NOT WORK RIGHT (only looks at first char as a str)
 
 -output food items after sorting (rn user has to call for view again)

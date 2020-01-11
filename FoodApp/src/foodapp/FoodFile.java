@@ -133,7 +133,7 @@ public class FoodFile implements DAO<FoodItem> {
     */
     @Override
     public boolean delete(FoodItem food) {
-        int indexOfFood = this.exists(food);
+        int indexOfFood = this.existsByName(food);
         
         if (indexOfFood == -1){
             return false;
@@ -145,9 +145,7 @@ public class FoodFile implements DAO<FoodItem> {
     }
     
     /*
-    removes the FoodItem at the param index in foodItemsList
-    returns true if possible
-    returns false if not
+    DELETE BY INDEX
     */
     public boolean deleteByIndex(int index){
         if (this.foodItemsList.remove(index) != null){
@@ -185,7 +183,7 @@ public class FoodFile implements DAO<FoodItem> {
     returns index of it if it does
     returns -1 if it does not
     */
-    public int exists(FoodItem foodItem){
+    public int existsByName(FoodItem foodItem){
         for (FoodItem f : this.foodItemsList){
             if (f.getName().toLowerCase().equals(foodItem.getName().toLowerCase())){
                 return this.foodItemsList.indexOf(f);

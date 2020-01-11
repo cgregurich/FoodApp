@@ -50,3 +50,9 @@ TextUserInterface:
     -method sortFoods
     -method sortFoodsInputCriteria
     -method convertStringToStat
+
+1-10-20:
+TextUserInterface:
+    -cleaned up delete methods
+    -created method deleteMultipleFoodsDeleteAll
+    -created method deleteMultipleFoodsChoose
