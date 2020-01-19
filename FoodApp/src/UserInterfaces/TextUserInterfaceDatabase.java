@@ -172,7 +172,12 @@ public class TextUserInterfaceDatabase {
     */
     public void addNewFood(){
         FoodItem newFood = addNewFoodGetInput();
-        foodDb.add(newFood);
+        if (foodDb.add(newFood)){
+            System.out.println("\n" +newFood.getName()+ " has been added.\n");
+        }
+        else{
+            System.out.println("\nERROR. " +newFood.getName()+ " has already been added.");
+        }
     }
     
     
@@ -182,12 +187,14 @@ public class TextUserInterfaceDatabase {
     public FoodItem addNewFoodGetInput(){
         FoodItem newFood = new FoodItem("");
         
-        
-        
         String[] inputsArr = new String[this.statsArr.length];
         
         for (int i = 0; i < this.statsArr.length; i++){
             System.out.print("Enter " +this.statsArr[i]+ ": ");
+            String input = sc.nextLine();
+            if (input.equalsIgnoreCase("x")){
+                return null;
+            }
             inputsArr[i] = sc.nextLine();
         }
         
@@ -200,7 +207,20 @@ public class TextUserInterfaceDatabase {
     DELETE FOOD BY NAME
     */
     public void deleteFoodByName(){
-        this.foodDb.deleteByName(deleteFoodGetInput());
+        String nameToBeDeleted = deleteFoodGetInput();
+        
+        if (nameToBeDeleted == null){
+            userMenuCommand();
+            return;
+        }
+        
+        if(this.foodDb.deleteByName(nameToBeDeleted)){
+            System.out.println("\n" +nameToBeDeleted+ " was deleted.");
+        }
+        else{
+            System.out.println("\n" +nameToBeDeleted+ " could not be found.");
+        }
+            
         //TODO: output if a food can't be found??
         //output what food(s) were deleted
     }
@@ -211,6 +231,16 @@ public class TextUserInterfaceDatabase {
     public String deleteFoodGetInput(){
         System.out.print("Enter name of food to delete: ");
         String name = sc.nextLine().toLowerCase();
+        if (userWantsToLeave(name)){
+            return null;
+        }
         return name;
+    }
+    
+    /*
+    USER WANTS TO LEAVE
+    */
+    public boolean userWantsToLeave(String input){
+         return input.equalsIgnoreCase("x");
     }
 }

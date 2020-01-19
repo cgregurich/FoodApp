@@ -22,9 +22,9 @@ import UserInterfaces.TextUserInterfaceDatabase;
 public class FoodApp {
 
     public static void main(String[] args) {
-        //TextUserInterfaceDatabase tUI = new TextUserInterfaceDatabase();
+        TextUserInterfaceDatabase tUI = new TextUserInterfaceDatabase();
         
-        TextUserInterface tUI = new TextUserInterface();
+        //TextUserInterface tUI = new TextUserInterface();
         tUI.run();
         
        

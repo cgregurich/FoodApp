@@ -56,3 +56,11 @@ TextUserInterface:
     -cleaned up delete methods
     -created method deleteMultipleFoodsDeleteAll
     -created method deleteMultipleFoodsChoose
+
+1-11-20:
+FoodItemSorter:
+    -Added parameter to sortIntArray and sortStringArray isAscending
+-Added to sorting functionality the option of ascending or descending
+-Added functionality to print foods after each sorting
+TextUserInterface:
+    -Added method sortFoodsUserInputOrder

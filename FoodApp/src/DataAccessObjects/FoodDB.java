@@ -26,7 +26,9 @@ public class FoodDB implements DAO<FoodItem> {
     + " resource_group_id = ?) and DSN like ? order by 2";
     
     
-    
+    /*
+    GET CONNECTION
+    */
     public Connection getConnection(){
         String dbUrl = "jdbc:sqlite:FoodAppFoodItems.sqlite";
         
@@ -40,6 +42,9 @@ public class FoodDB implements DAO<FoodItem> {
         }
     }
 
+    /*
+    GET ALL
+    */
     @Override
     public List<FoodItem> getAll() {
         String query = "SELECT * FROM " +TABLE_NAME;
@@ -67,6 +72,9 @@ public class FoodDB implements DAO<FoodItem> {
         }
     }
 
+    /*
+    ADD
+    */
     @Override
     public boolean add(FoodItem newFood) {
         String query = "INSERT INTO " +TABLE_NAME
@@ -80,8 +88,6 @@ public class FoodDB implements DAO<FoodItem> {
             
             List<String> newFoodStatsList = newFood.getStatsList();
             int statementIndex = 1;
-            System.out.println("statsList: ");
-            System.out.println(newFoodStatsList);
             for (String stat : newFoodStatsList){
                 ps.setString(statementIndex, stat);
                 statementIndex++;
@@ -92,7 +98,6 @@ public class FoodDB implements DAO<FoodItem> {
             
             return true;
         } catch (SQLException e){
-            System.err.println(e);
             return false;
         }
     }
@@ -104,6 +109,7 @@ public class FoodDB implements DAO<FoodItem> {
         try{
             List<FoodItem> foodItemsList = new ArrayList<>();
             while (rs.next()){
+                System.out.println("has next"); //testing
                 String[] stats = new String[9];
                 stats[0] = rs.getString("name");
                 stats[1] = rs.getString("servingsize");
@@ -162,6 +168,9 @@ public class FoodDB implements DAO<FoodItem> {
         }
     }
     
+    /*
+    CONVERT STRING TO STAT
+    */
     public Stat convertStringToStat(String statStr){
         try{
             if (statStr.equals("servingsize")){
@@ -178,6 +187,9 @@ public class FoodDB implements DAO<FoodItem> {
         }
     }
 
+    /*
+    DELETE
+    */
     @Override
     public boolean delete(FoodItem t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -199,6 +211,13 @@ public class FoodDB implements DAO<FoodItem> {
         try (Connection connection = getConnection();
                 PreparedStatement ps = connection.prepareStatement(query)){
             
+            
+            List<FoodItem> foods = getListOfFoodsWithName(name);
+            
+            if ( foods == null || foods.isEmpty()){
+                return false;
+            }
+            
             ps.setString(1, name);
             ps.executeUpdate();
             
@@ -208,6 +227,33 @@ public class FoodDB implements DAO<FoodItem> {
             return false;
         }
     }
+    
+    /*
+    GET LIST OF FOODS WITH NAME
+    */
+    public List<FoodItem> getListOfFoodsWithName(String name){
+        String query = "SELECT * FROM " +TABLE_NAME+ ""
+                + " WHERE name = ?";
+        
+        List<FoodItem> list = new ArrayList<>();
+        
+        try(Connection connection = getConnection();
+                PreparedStatement ps = connection.prepareStatement(query)){
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            
+            list = populateListFromResultSet(rs);
+            
+            return list;
+            
+            
+        } catch (SQLException e){
+            System.err.println(e);
+            return null;
+        }
+    }
+    
+    
 
     //maybe uneccessary method?? idk!
     public boolean save() {
