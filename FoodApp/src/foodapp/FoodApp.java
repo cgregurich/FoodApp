@@ -10,20 +10,33 @@ package foodapp;
  *
  * @author colin
  */
+import DataAccessObjects.FoodDB;
 import java.util.List;
 import java.util.ArrayList;
 import static foodapp.Stat.*;
+import UserInterfaces.TextUserInterface;
+import UserInterfaces.TextUserInterfaceDatabase;
+
 
 
 public class FoodApp {
 
     public static void main(String[] args) {
+        //TextUserInterfaceDatabase tUI = new TextUserInterfaceDatabase();
+        
         TextUserInterface tUI = new TextUserInterface();
         tUI.run();
-
-        //git lowercase reeee
+        
        
-       
+        
+        /*
+        FoodDB foodDb = new FoodDB();
+        FoodItem f = new FoodItem("test1name", "testss", "testunit", "testcalories",
+                    "testcarbs", "testfat", "testprotein", "testfiber", "testsugar");
+        foodDb.add(f);
+        */
+        
+        
         
         
         /*

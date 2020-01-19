@@ -1,0 +1,131 @@
+TODO:
+
+
+
+-SPLIT Update into more methods (ugly code rn!)
+
+-split deleteMultipleFoods into multiple methods
+
+
+MATH FUNCTIONALITY!!!!
+
+-sorting functionality. Sort by name (a-z or z-a) sort by SS (useless?), 
+    by unit, cals, carbs, fat, etc.
+
+-make a replace method in FoodFileDAO to deal with sorting 
+    maybe even just make pop() from python to return the removed Object
+
+-in the future when prices are added (??) include $ per calories as well as by price.
+
+
+
+
+
+SORTING:
+    *?-need to deal with converting stats to int if needed, sorting numbers 
+    as strings DOES NOT WORK RIGHT (only looks at first char as a str)
+
+-output food items after sorting (rn user has to call for view again)
+
+-give option of ascending or descending (or a-z / z-a in the case of unit and name)
+
+-add validation for int stats to only take ints (to avoid issues with sorting)
+
+
+
+
+
+
+
+
+
+
+-prices and grocery functionality
+
+-somehow pull info from online for macros instead of manually entering? LOL
+
+
+        
+        
+
+
+-add functionality to do math with food stats
+    eg. enter food name to choose food, then enter how many units to display
+    so if I enter oats then 80, it'll display macros for 80g instead of a serving size
+
+-figure out GUI???
+
+-crazy functionality that allows me to calculate my daily macros and shish
+    
+DONE:
+
+
+create food item class
+    -create fields
+    -create getters for all fields
+    -create setters for all fields
+    
+create file access class (implements DAO)
+
+create DAO interface
+    -getAll: reads file and puts each food item on a list, returns list
+    -add: adds a new food item to file (specifically: writes food item to list then runs save() )
+    -delete: deletes a food item from file if it exists (specifically: removes food item from list if it's on list then 
+        runs save() )
+    -save: writes all food items in list to file
+
+create text user interface
+    **-displays command menu
+    **-prompts user for command
+    **-calls method based on command           (like NameFileApp)
+    -methods:
+        **add (add food item to file; prompts for all stats; validate unit choices? enum? probably!)
+        **remove (remove food item from file, based on name; remove all with name or first? probably!)
+        **view (view all in file)
+        **search (search for foods containing keyword in name?)
+
+**search functionality needs to be less specific
+      
+
+**add in text user interface delete() functionality to see how many items have a name
+**and to ask user to delete all or not? prob need a **search method before this
+
+**WHY DOES UPDATE DUPLICATE????:
+    because you were pulling a FoodItem by ref and altering an attribute, then 
+    calling an updateFood method of FoodFile that inserted a new food.
+    thinking that it would insert and replace at param index but instead
+    inserted at index and pushed everything by one.
+
+**work on formatted output in chart style instead of title: info repeating
+
+functionality to update food info
+    **-get update to work (currently duplicates but updates??)
+    -validate user entry in multiple areas
+    -deal with multiple results
+
+**X TO LEAVE:
+    **add
+    **-del
+    **-update
+    **-search
+
+*?*implement formatted output in all areas of the program (delete for example)
+
+**-add cancel functionality to all (if needed) options in the program (to avoid spam input)
+**-also to avoid having to make a choice eg. deleting one of same name entries (want to delete none!)
+
+**-del and update (which one clause) needs to deal with non number entry
+
+1-6-20
+
+**-change output of multiple search results found to formatted ouput
+
+
+
+**change output from ss and unit separate to ss and unit combined (example: serving size 32g)
+
+**-give user multiple chances to enter food to delete (when enter name that doesnt exist)
+    idk if necessary
+
+**-FIX BUG: when using x clause in update when prompted for new value for stat, 
+    the stat becomes x

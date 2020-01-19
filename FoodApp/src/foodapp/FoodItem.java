@@ -25,8 +25,26 @@ public class FoodItem implements Comparable {
     //list needed to check if a stat == "x" in FoodFile
     private List<String> statsList = new ArrayList<>(); 
     
-    public FoodItem(){
-        
+  
+    
+    public boolean setStatsFromArray(String[] statsArr){
+        try{
+            this.name = statsArr[0];
+            this.servingSize = statsArr[1];
+            this.unit = statsArr[2];
+            this.calories = statsArr[3];
+            this.carbs = statsArr[4];
+            this.fat = statsArr[5];
+            this.protein = statsArr[6];
+            this.fiber = statsArr[7];
+            this.sugar = statsArr[8];
+            updateList();
+            return true;
+        } catch (Exception e){
+            System.err.println(e);
+            return false;
+        }
+            
     }
     
     /*
@@ -81,6 +99,18 @@ public class FoodItem implements Comparable {
         this.fiber = fiber;
         this.sugar = sugar;
         this.updateList();
+    }
+    
+    public FoodItem(String[] statsArr){
+        this.name = statsArr[0];
+        this.servingSize = statsArr[1];
+        this.unit = statsArr[2];
+        this.calories = statsArr[3];
+        this.carbs = statsArr[4];
+        this.fat = statsArr[5];
+        this.protein = statsArr[6];
+        this.fiber = statsArr[7];
+        this.sugar = statsArr[8];
     }
     
     /*
