@@ -18,7 +18,6 @@ import static foodapp.Stat.*;
 public class FoodApp {
 
     public static void main(String[] args) {
-        FoodFile ff = new FoodFile();
         TextUserInterface tUI = new TextUserInterface();
         tUI.run();
 
