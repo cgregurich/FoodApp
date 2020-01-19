@@ -51,11 +51,13 @@ public class TextUserInterfaceDatabase {
     USER MENU COMMAND
     */
     public String userMenuCommand(){
+        
         System.out.print("\nCommand: ");
         String command = sc.nextLine().toLowerCase();
         System.out.println("");
         
         switch (command){
+            
             case "view":
                 this.view();
                 break;
@@ -81,7 +83,6 @@ public class TextUserInterfaceDatabase {
                 break;
                 
         }
-        
         
         return command;
     }
@@ -172,6 +173,12 @@ public class TextUserInterfaceDatabase {
     */
     public void addNewFood(){
         FoodItem newFood = addNewFoodGetInput();
+        
+        if (newFood == null){
+            return;
+        }
+        
+        
         if (foodDb.add(newFood)){
             System.out.println("\n" +newFood.getName()+ " has been added.\n");
         }
@@ -192,10 +199,11 @@ public class TextUserInterfaceDatabase {
         for (int i = 0; i < this.statsArr.length; i++){
             System.out.print("Enter " +this.statsArr[i]+ ": ");
             String input = sc.nextLine();
-            if (input.equalsIgnoreCase("x")){
+            if (userWantsToLeave(input)){
                 return null;
             }
-            inputsArr[i] = sc.nextLine();
+            
+            inputsArr[i] = input;
         }
         
         newFood.setStatsFromArray(inputsArr);
@@ -210,7 +218,6 @@ public class TextUserInterfaceDatabase {
         String nameToBeDeleted = deleteFoodGetInput();
         
         if (nameToBeDeleted == null){
-            userMenuCommand();
             return;
         }
         

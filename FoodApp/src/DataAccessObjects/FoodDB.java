@@ -77,6 +77,11 @@ public class FoodDB implements DAO<FoodItem> {
     */
     @Override
     public boolean add(FoodItem newFood) {
+        
+        if (foodAlreadyExists(newFood.getName())){
+            return false;
+        }
+        
         String query = "INSERT INTO " +TABLE_NAME
                 + "(name, servingsize, unit, cals, carbs, fat, protein,"
                 + "  fiber, sugar)"
@@ -103,13 +108,20 @@ public class FoodDB implements DAO<FoodItem> {
     }
     
     /*
+    DOES FOOD ALREADY EXIST
+    */
+    public boolean foodAlreadyExists(String name){
+        List<FoodItem> list = getListOfFoodsWithName(name);
+        return !list.isEmpty();
+    }
+    
+    /*
     POPULATE LIST FROM RESULT SET
     */
     public List<FoodItem> populateListFromResultSet(ResultSet rs){
         try{
             List<FoodItem> foodItemsList = new ArrayList<>();
             while (rs.next()){
-                System.out.println("has next"); //testing
                 String[] stats = new String[9];
                 stats[0] = rs.getString("name");
                 stats[1] = rs.getString("servingsize");
