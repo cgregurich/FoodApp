@@ -19,7 +19,7 @@ public class TextUserInterfaceDatabase {
     private FoodDB foodDb = new FoodDB();
     private String[] statsArr = {"name", "serving size", "unit", "calories", "carbs",
             "fat", "protein", "fiber", "sugar"};
-    private String[] statsArrShort = {"name", "ss", "unit", "cal", "carbs",
+    private String[] statsArrShort = {"name", "ss", "unit", "cals", "carbs",
             "fat", "protein", "fiber", "sugar"};
     
     
@@ -74,6 +74,10 @@ public class TextUserInterfaceDatabase {
                 this.deleteFoodByName();
                 break;
                 
+            case "search":
+                this.search();
+                break;
+                
             case "help":
                 displayMenu();
                 break;
@@ -107,10 +111,12 @@ public class TextUserInterfaceDatabase {
         
         List<FoodItem> sortedFoods = this.foodDb.sort(params);
         
+        System.out.println("");
         this.foodDb.printAllFoodsFormatted(sortedFoods);
         
         return true;
     }
+    
     
     /*
     SORT FOODS GET INPUT
@@ -163,7 +169,10 @@ public class TextUserInterfaceDatabase {
             }
         }
         
+        
+        
         String[] returnArr = {sortCriteria, order};
+        
         
         return returnArr;
     }
@@ -192,7 +201,7 @@ public class TextUserInterfaceDatabase {
     ADD NEW FOOD GET INPUT
     */
     public FoodItem addNewFoodGetInput(){
-        FoodItem newFood = new FoodItem("");
+        FoodItem newFood;
         
         String[] inputsArr = new String[this.statsArr.length];
         
@@ -206,7 +215,8 @@ public class TextUserInterfaceDatabase {
             inputsArr[i] = input;
         }
         
-        newFood.setStatsFromArray(inputsArr);
+        newFood = new FoodItem(inputsArr);
+        
         
         return newFood;
     }
@@ -221,6 +231,11 @@ public class TextUserInterfaceDatabase {
             return;
         }
         
+        if (nameToBeDeleted.equalsIgnoreCase("name")){
+            System.out.println("\nName to delete can't be name.");
+            return;
+        }
+        
         if(this.foodDb.deleteByName(nameToBeDeleted)){
             System.out.println("\n" +nameToBeDeleted+ " was deleted.");
         }
@@ -228,8 +243,7 @@ public class TextUserInterfaceDatabase {
             System.out.println("\n" +nameToBeDeleted+ " could not be found.");
         }
             
-        //TODO: output if a food can't be found??
-        //output what food(s) were deleted
+        
     }
     
     /*
@@ -243,6 +257,18 @@ public class TextUserInterfaceDatabase {
         }
         return name;
     }
+    
+    /*
+    SEARCH
+    */
+    public void search(){
+        //searchGetInput();
+    }
+    
+    /*
+    SEARCH GET INPUT
+    */
+    //TODO
     
     /*
     USER WANTS TO LEAVE

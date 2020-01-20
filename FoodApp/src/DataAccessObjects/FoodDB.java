@@ -90,39 +90,60 @@ public class FoodDB implements DAO<FoodItem> {
         try (Connection connection = getConnection();
                 PreparedStatement ps = connection.prepareStatement(query)){
             
-            
             List<String> newFoodStatsList = newFood.getStatsList();
+            
+            
             int statementIndex = 1;
             for (String stat : newFoodStatsList){
                 ps.setString(statementIndex, stat);
                 statementIndex++;
             }
-            
             ps.executeUpdate();
             
             
             return true;
         } catch (SQLException e){
+            //System.err.println(e);
             return false;
         }
     }
     
     /*
-    DOES FOOD ALREADY EXIST
+    FOOD ALREADY EXISTS
     */
     public boolean foodAlreadyExists(String name){
-        List<FoodItem> list = getListOfFoodsWithName(name);
-        return !list.isEmpty();
+        List<FoodItem> foodItemsList = getListOfFoodsFromName(name);
+        return !foodItemsList.isEmpty();
+    }
+    
+    public List<FoodItem> getListOfFoodsFromName(String name){
+        String query = "SELECT * FROM " +TABLE_NAME+ ""
+                + " WHERE name = ?";
+        
+        try(Connection connection = getConnection();
+                PreparedStatement ps = connection.prepareStatement(query)){
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            
+            List<FoodItem> list = this.getListOfFoodsFromResultSet(rs);
+            return list;
+            
+        } catch (SQLException e){
+            System.err.println(e);
+            return null;
+        }
     }
     
     /*
-    POPULATE LIST FROM RESULT SET
+    GET LIST OF FOODS FROM RESULT SET
     */
-    public List<FoodItem> populateListFromResultSet(ResultSet rs){
+    public List<FoodItem> getListOfFoodsFromResultSet(ResultSet rs){
+        List<FoodItem> list = new ArrayList<>();
+        
         try{
-            List<FoodItem> foodItemsList = new ArrayList<>();
+            FoodItem food;
+            String[] stats = new String[9];
             while (rs.next()){
-                String[] stats = new String[9];
                 stats[0] = rs.getString("name");
                 stats[1] = rs.getString("servingsize");
                 stats[2] = rs.getString("unit");
@@ -132,16 +153,19 @@ public class FoodDB implements DAO<FoodItem> {
                 stats[6] = rs.getString("protein");
                 stats[7] = rs.getString("fiber");
                 stats[8] = rs.getString("sugar");
-                FoodItem f = new FoodItem(stats);
-                foodItemsList.add(f);
+                food = new FoodItem(stats);
+                list.add(food);
             }
-            return foodItemsList;
+            
+            return list;
             
         } catch (SQLException e){
             System.err.println(e);
             return null;
         }
     }
+    
+   
     
     /*
     SORT
@@ -156,7 +180,7 @@ public class FoodDB implements DAO<FoodItem> {
                 PreparedStatement ps = connection.prepareStatement(query)){
             
             ResultSet rs = ps.executeQuery();
-            List<FoodItem> foodItemsList = populateListFromResultSet(rs);
+            List<FoodItem> foodItemsList = getListOfFoodsFromResultSet(rs);
             
             if (foodItemsList == null){
                 return null;
@@ -180,6 +204,8 @@ public class FoodDB implements DAO<FoodItem> {
         }
     }
     
+  
+    
     /*
     CONVERT STRING TO STAT
     */
@@ -188,9 +214,7 @@ public class FoodDB implements DAO<FoodItem> {
             if (statStr.equals("servingsize")){
                 statStr = "ss";
             }
-            if (statStr.equals("cal")){
-                statStr = "cals";
-            }
+            
             Stat stat = Stat.valueOf(statStr.toUpperCase());
             return stat;
         } catch (Exception e){
@@ -213,7 +237,6 @@ public class FoodDB implements DAO<FoodItem> {
     */
     public boolean deleteByName(String name){
         if (name.equals("name")){
-            System.err.println("name to delete can't be name");
             return false;
         }
         
@@ -223,10 +246,9 @@ public class FoodDB implements DAO<FoodItem> {
         try (Connection connection = getConnection();
                 PreparedStatement ps = connection.prepareStatement(query)){
             
+            List<FoodItem> foodItemsList = getListOfFoodsFromName(name);
             
-            List<FoodItem> foods = getListOfFoodsWithName(name);
-            
-            if ( foods == null || foods.isEmpty()){
+            if (foodItemsList == null || foodItemsList.isEmpty()){
                 return false;
             }
             
@@ -240,46 +262,6 @@ public class FoodDB implements DAO<FoodItem> {
         }
     }
     
-    /*
-    GET LIST OF FOODS WITH NAME
-    */
-    public List<FoodItem> getListOfFoodsWithName(String name){
-        String query = "SELECT * FROM " +TABLE_NAME+ ""
-                + " WHERE name = ?";
-        
-        List<FoodItem> list = new ArrayList<>();
-        
-        try(Connection connection = getConnection();
-                PreparedStatement ps = connection.prepareStatement(query)){
-            ps.setString(1, name);
-            ResultSet rs = ps.executeQuery();
-            
-            list = populateListFromResultSet(rs);
-            
-            return list;
-            
-            
-        } catch (SQLException e){
-            System.err.println(e);
-            return null;
-        }
-    }
-    
-    
-
-    //maybe uneccessary method?? idk!
-    public boolean save() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-    /*
-    GET
-    */
-    @Override
-    public FoodItem get(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public boolean update(FoodItem t) {
@@ -313,6 +295,11 @@ public class FoodDB implements DAO<FoodItem> {
             System.out.format("%-7s", f.getFiber());
             System.out.format("%-7s%n", f.getSugar());
         }
+    }
+
+    @Override
+    public FoodItem get(String name) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

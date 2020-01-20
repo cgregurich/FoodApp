@@ -17,124 +17,6 @@ import java.util.ArrayList;
 
 public class FoodItemSorter {
     
-    //DELETE ALL THIS SHISH WHEN YOU KNOW THE NEW CLASS WORKS
-    /*
-    SORT STRING ARRAY
-    IMPLEMENTED
-    
-    public String[] sortStringArrayAscending(String[] strArr){
-        String temp;
-        int size = strArr.length;
-        
-        for (int i = 0; i < size; i++){
-            for (int j = i + 1; j < size; j++){
-                if (strArr[i].compareTo(strArr[j]) > 0){
-                    temp = strArr[i];
-                    strArr[i] = strArr[j];
-                    strArr[j] = temp;
-                }
-            }
-        }
-       
-        return strArr;
-    }
-    */
-    
-    
-    /*
-    public List<FoodItem> sortByStatDescending(List<FoodItem> foodItemsList, Stat stat){
-        List<FoodItem> sortedList;
-        
-        
-        //EXTRACT METHOD
-        if (stat == NAME || stat == UNIT){
-            String[] firstArr = populateArrByStat(foodItemsList, stat);
-            String[] sortedArr = sortStringArrayDescending(firstArr);
-            
-            sortedList = new ArrayList<>();
-            
-            for (String currentStat : sortedArr){
-                for (FoodItem food : foodItemsList){
-                    if (food.getStat(stat).equals(currentStat)){
-                        sortedList.add(food);
-                        foodItemsList.remove(food);
-                        break;
-                    }
-                }
-            }
-        }
-        
-        //EXTRACT METHOD
-        else{
-            
-        }
-        
-        
-    }
-    */
-    
-    
-    /*
-    HOMEBASE FOR SORTING
-    SORT BY STAT
-    
-    public List<FoodItem> sortByStatAscending(List<FoodItem> foodItemsList, Stat stat){
-        List<FoodItem> sortedList;
-        
-        
-        //if stat is String based instead of number based
-        if (stat == NAME || stat == UNIT){
-            //firstArr exists just for cleanlieness of code
-            String[] firstArr = populateArrByStat(foodItemsList, stat);
-            String[] sortedArr = sortStringArray(firstArr);
-
-            sortedList = new ArrayList<>();
-
-            for (String currentStat : sortedArr){
-                for (FoodItem food : foodItemsList){
-                    if (food.getStat(stat).equals(currentStat)){
-                        sortedList.add(food);
-                        foodItemsList.remove(food);
-                        break;
-                    }
-                }
-            }
-        }
-        
-        else{ //stat is something of int value
-            String[] strArr = populateArrByStat(foodItemsList, stat);
-            int[] firstArr = convertToIntArray(strArr);
-            int[] sortedArr = sortIntArray(firstArr);
-
-            sortedList = new ArrayList<>();
-
-            for (int currentStat : sortedArr){
-                for (FoodItem food : foodItemsList){
-                    int foodStat = Integer.parseInt(food.getStat(stat));
-                    
-                    if (foodStat == currentStat){
-                        sortedList.add(food);
-                        foodItemsList.remove(food);
-                        break;
-                    }
-
-                }
-            }
-        }
-            
-        return sortedList;
-    }
-    */
-    
-    
-    
-    
-    
-    
-    
-    
-    //BELOW HERE IS NEW CLASS
-    
     /*
     SORT BY STAT
     */
@@ -358,6 +240,7 @@ public class FoodItemSorter {
                 intArr[i] = Integer.parseInt(strArr[i]);
             }
         }catch (Exception e){
+            System.err.print(e);
             return null;
         }    
      

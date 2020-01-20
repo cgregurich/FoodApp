@@ -25,6 +25,44 @@ public class FoodItem implements Comparable {
     //list needed to check if a stat == "x" in FoodFile
     private List<String> statsList = new ArrayList<>(); 
     
+    
+    
+    public FoodItem(){
+        
+    }
+    
+    public FoodItem(String name){
+        this.name = name;
+        this.statsList.add(name);
+    }
+    
+    public FoodItem(String name, String ss, String unit, String cals, String carbs,
+            String fat, String protein, String fiber, String sugar){
+        this.name = name;
+        this.servingSize = ss;
+        this.unit = unit;
+        this.calories = cals;
+        this.carbs = carbs;
+        this.fat = fat;
+        this.protein = protein;
+        this.fiber = fiber;
+        this.sugar = sugar;
+        this.updateList();
+    }
+    
+    public FoodItem(String[] statsArr){
+        this.name = statsArr[0];
+        this.servingSize = statsArr[1];
+        this.unit = statsArr[2];
+        this.calories = statsArr[3];
+        this.carbs = statsArr[4];
+        this.fat = statsArr[5];
+        this.protein = statsArr[6];
+        this.fiber = statsArr[7];
+        this.sugar = statsArr[8];
+        this.updateList();
+    }
+    
   
     
     public boolean setStatsFromArray(String[] statsArr){
@@ -82,36 +120,7 @@ public class FoodItem implements Comparable {
         return null;
     }
     
-    public FoodItem(String name){
-        this.name = name;
-        this.statsList.add(name);
-    }
     
-    public FoodItem(String name, String ss, String unit, String cals, String carbs,
-            String fat, String protein, String fiber, String sugar){
-        this.name = name;
-        this.servingSize = ss;
-        this.unit = unit;
-        this.calories = cals;
-        this.carbs = carbs;
-        this.fat = fat;
-        this.protein = protein;
-        this.fiber = fiber;
-        this.sugar = sugar;
-        this.updateList();
-    }
-    
-    public FoodItem(String[] statsArr){
-        this.name = statsArr[0];
-        this.servingSize = statsArr[1];
-        this.unit = statsArr[2];
-        this.calories = statsArr[3];
-        this.carbs = statsArr[4];
-        this.fat = statsArr[5];
-        this.protein = statsArr[6];
-        this.fiber = statsArr[7];
-        this.sugar = statsArr[8];
-    }
     
     /*
     returns a String of all info of FoodItem, each stat labelled and
