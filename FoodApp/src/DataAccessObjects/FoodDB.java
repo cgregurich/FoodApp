@@ -24,6 +24,7 @@ public class FoodDB implements DAO<FoodItem> {
     private static final String SQL = "select instance_id, %s from eam_measurement"
     + " where resource_id in (select RESOURCE_ID from eam_res_grp_res_map where"
     + " resource_group_id = ?) and DSN like ? order by 2";
+    private String[] lastSortArr = new String[2];
     
     
     /*
@@ -51,6 +52,8 @@ public class FoodDB implements DAO<FoodItem> {
         List<FoodItem> foodItems = new ArrayList<>();
         
         
+        
+        
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
              ResultSet rs = ps.executeQuery()){
@@ -65,6 +68,18 @@ public class FoodDB implements DAO<FoodItem> {
                 FoodItem f = new FoodItem(statsArr);
                 foodItems.add(f);
             }
+            
+            /*
+            FIX THIS
+            implement ability for program to "remember" last sort type, 
+            so when getAll is called, returns an aptly sorted list of FoodItems
+            */
+            if (this.lastSortArr != null){
+                System.out.println("not null");
+                return this.sort(this.lastSortArr);
+            }
+            
+            
             return foodItems;
         } catch (SQLException e){
             System.err.println(e);
@@ -103,7 +118,6 @@ public class FoodDB implements DAO<FoodItem> {
             
             return true;
         } catch (SQLException e){
-            //System.err.println(e);
             return false;
         }
     }
@@ -125,7 +139,7 @@ public class FoodDB implements DAO<FoodItem> {
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
             
-            List<FoodItem> list = this.getListOfFoodsFromResultSet(rs);
+            List<FoodItem> list = this.createListOfFoodsFromResultSet(rs);
             return list;
             
         } catch (SQLException e){
@@ -135,9 +149,9 @@ public class FoodDB implements DAO<FoodItem> {
     }
     
     /*
-    GET LIST OF FOODS FROM RESULT SET
+    CREATE LIST OF FOODS FROM RESULT SET
     */
-    public List<FoodItem> getListOfFoodsFromResultSet(ResultSet rs){
+    public List<FoodItem> createListOfFoodsFromResultSet(ResultSet rs){
         List<FoodItem> list = new ArrayList<>();
         
         try{
@@ -173,6 +187,9 @@ public class FoodDB implements DAO<FoodItem> {
     public List<FoodItem> sort(String[] params){
         String sortCriteria = params[0];
         String order = params[1].toUpperCase();
+        this.lastSortArr = params;
+        
+        
         
         String query = "SELECT * FROM " +TABLE_NAME;
         
@@ -180,7 +197,7 @@ public class FoodDB implements DAO<FoodItem> {
                 PreparedStatement ps = connection.prepareStatement(query)){
             
             ResultSet rs = ps.executeQuery();
-            List<FoodItem> foodItemsList = getListOfFoodsFromResultSet(rs);
+            List<FoodItem> foodItemsList = createListOfFoodsFromResultSet(rs);
             
             if (foodItemsList == null){
                 return null;
@@ -262,6 +279,30 @@ public class FoodDB implements DAO<FoodItem> {
         }
     }
     
+    
+    /*
+    SEARCH BY KEYWORD
+    */
+    public List<FoodItem> searchByKeyword(String keyword){
+        String query = "SELECT * FROM " +TABLE_NAME+ ""
+                + " WHERE name LIKE ?";
+        keyword = "%" +keyword+ "%";
+        
+        
+        
+        try (Connection connection = getConnection();
+                PreparedStatement ps = connection.prepareStatement(query)){
+            ps.setString(1, keyword);
+            
+            ResultSet rs = ps.executeQuery();
+            List<FoodItem> foodsThatContainKeyword = createListOfFoodsFromResultSet(rs);
+            return foodsThatContainKeyword;
+            
+        } catch (SQLException e){
+            System.err.println(e);
+            return null;
+        }
+    }
 
     @Override
     public boolean update(FoodItem t) {

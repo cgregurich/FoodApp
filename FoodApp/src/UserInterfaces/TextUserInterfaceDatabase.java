@@ -41,7 +41,7 @@ public class TextUserInterfaceDatabase {
         System.out.println("sort - sort foods by chose criteria");
         System.out.println("add - add a new food");
         System.out.println("del - delete a food by name");
-        System.out.println("search - search for a food by name");
+        System.out.println("search - search for a food by keyword");
         System.out.println("update - update the info of a food");
         System.out.println("help - display this menu");
         System.out.println("exit - exit the program");
@@ -141,8 +141,6 @@ public class TextUserInterfaceDatabase {
             
             for (String stat : this.statsArrShort){
                 if (sortCriteria.equals(stat)){
-                    System.out.println("sortCriteria: " +sortCriteria);
-                    System.out.println("stat: " +stat);
                     isCriteriaValid = true;
                     break;
                 }
@@ -161,7 +159,7 @@ public class TextUserInterfaceDatabase {
         
         String order = "";
         while (!(order.equals("asc") || order.equals("desc"))){
-            System.out.print("Ascending or descending? (asc or desc): ");
+            System.out.print("Ascending or descending? (enter asc or desc): ");
             order = sc.nextLine().toLowerCase();
             
             if (!(order.equals("asc") || order.equals("desc"))){
@@ -262,13 +260,39 @@ public class TextUserInterfaceDatabase {
     SEARCH
     */
     public void search(){
-        //searchGetInput();
+        String keyword = getKeywordFromUser();
+        
+        if (keyword == null){
+            return;
+        }
+        
+        List<FoodItem> foodsThatContainKeyword = this.foodDb.searchByKeyword(keyword);
+        
+        if (foodsThatContainKeyword.isEmpty()){
+            System.out.println("\nNo results found for \"" +keyword+ "\".");
+            return;
+        }
+        else{
+            System.out.println("");
+            this.foodDb.printAllFoodsFormatted(foodsThatContainKeyword);
+        }
+        
+        
     }
     
     /*
     SEARCH GET INPUT
     */
-    //TODO
+    public String getKeywordFromUser(){
+        System.out.print("Enter keyword: ");
+        String keyword = sc.nextLine();
+        
+        if (keyword.equalsIgnoreCase("x")){
+            return null;
+        }
+        
+        return keyword;
+    }
     
     /*
     USER WANTS TO LEAVE
