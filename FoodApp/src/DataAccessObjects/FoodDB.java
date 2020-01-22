@@ -24,7 +24,7 @@ public class FoodDB implements DAO<FoodItem> {
     private static final String SQL = "select instance_id, %s from eam_measurement"
     + " where resource_id in (select RESOURCE_ID from eam_res_grp_res_map where"
     + " resource_group_id = ?) and DSN like ? order by 2";
-    private String[] lastSortArr = new String[2];
+    private String[] lastSortArr = new String[2]; //0 is stat as string, 1 is order as string
     
     
     /*
@@ -49,10 +49,8 @@ public class FoodDB implements DAO<FoodItem> {
     @Override
     public List<FoodItem> getAll() {
         String query = "SELECT * FROM " +TABLE_NAME;
+        
         List<FoodItem> foodItems = new ArrayList<>();
-        
-        
-        
         
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
@@ -69,18 +67,10 @@ public class FoodDB implements DAO<FoodItem> {
                 foodItems.add(f);
             }
             
-            /*
-            FIX THIS
-            implement ability for program to "remember" last sort type, 
-            so when getAll is called, returns an aptly sorted list of FoodItems
-            */
-            if (this.lastSortArr != null){
-                System.out.println("not null");
-                return this.sort(this.lastSortArr);
-            }
             
             
-            return foodItems;
+            return sortFromList(foodItems, this.lastSortArr);
+            
         } catch (SQLException e){
             System.err.println(e);
             return null;
@@ -130,6 +120,9 @@ public class FoodDB implements DAO<FoodItem> {
         return !foodItemsList.isEmpty();
     }
     
+    /*
+    GET LIST OF FOODS FROM NAME
+    */
     public List<FoodItem> getListOfFoodsFromName(String name){
         String query = "SELECT * FROM " +TABLE_NAME+ ""
                 + " WHERE name = ?";
@@ -187,11 +180,11 @@ public class FoodDB implements DAO<FoodItem> {
     public List<FoodItem> sort(String[] params){
         String sortCriteria = params[0];
         String order = params[1].toUpperCase();
-        this.lastSortArr = params;
+        this.lastSortArr = params; //saves this sorting style
+
+        String query = "SELECT * FROM " +TABLE_NAME+ ""
+                + " ORDER BY " +sortCriteria+ " " +order;
         
-        
-        
-        String query = "SELECT * FROM " +TABLE_NAME;
         
         try (Connection connection = getConnection();
                 PreparedStatement ps = connection.prepareStatement(query)){
@@ -203,16 +196,7 @@ public class FoodDB implements DAO<FoodItem> {
                 return null;
             }
             
-            Stat sortStat = convertStringToStat(sortCriteria);
-            
-            if (sortStat == null){
-                return null;
-            }
-            
-            boolean isAscending = order.equals("ASC");
-            
-            List<FoodItem> sortedList = this.sorter.sortByStat(foodItemsList, sortStat, isAscending);
-            return sortedList;
+            return foodItemsList;
             
             
         } catch (SQLException e){
@@ -220,6 +204,52 @@ public class FoodDB implements DAO<FoodItem> {
             return null;
         }
     }
+    
+    /*
+    SORT FROM LIST
+    */
+    public List<FoodItem> sortFromList(List<FoodItem> unsortedList, String[] params){
+        
+        //if a sort hasn't already occurred
+        if (params[0] == null){
+            return unsortedList;
+        }
+        
+        String statStr = params[0];
+        String order = params[1].toUpperCase();
+        Stat stat = convertStringToStat(statStr);
+        boolean isAscending = order.equals("ASC");
+        List<FoodItem> sortedList = this.sorter.sortByStat(unsortedList, stat, isAscending);
+        return sortedList;
+        
+    }
+    
+    /*
+    SEARCH BY KEYWORD
+    */
+    public List<FoodItem> searchByKeyword(String keyword){
+        String query = "SELECT * FROM " +TABLE_NAME+ ""
+                + " WHERE name LIKE ?";
+        keyword = "%" +keyword+ "%";
+        
+        
+        
+        try (Connection connection = getConnection();
+                PreparedStatement ps = connection.prepareStatement(query)){
+            ps.setString(1, keyword);
+            
+            ResultSet rs = ps.executeQuery();
+            List<FoodItem> foodsThatContainKeyword = createListOfFoodsFromResultSet(rs);
+            
+            return sortFromList(foodsThatContainKeyword, this.lastSortArr);
+            
+        } catch (SQLException e){
+            System.err.println(e);
+            return null;
+        }
+    }
+    
+    
     
   
     
@@ -281,29 +311,29 @@ public class FoodDB implements DAO<FoodItem> {
     
     
     /*
-    SEARCH BY KEYWORD
+    UPDATE FOOD
     */
-    public List<FoodItem> searchByKeyword(String keyword){
-        String query = "SELECT * FROM " +TABLE_NAME+ ""
-                + " WHERE name LIKE ?";
-        keyword = "%" +keyword+ "%";
-        
-        
+    public boolean updateFood(String column, String newCell, String foodName){
+        String query = "UPDATE " +TABLE_NAME+ ""
+                + " SET " +column+ " = ?"
+                + " WHERE name = ?";
         
         try (Connection connection = getConnection();
                 PreparedStatement ps = connection.prepareStatement(query)){
-            ps.setString(1, keyword);
             
-            ResultSet rs = ps.executeQuery();
-            List<FoodItem> foodsThatContainKeyword = createListOfFoodsFromResultSet(rs);
-            return foodsThatContainKeyword;
+            ps.setString(1, newCell);
+            ps.setString(2, foodName);
             
+            ps.executeUpdate();
+            return true;
         } catch (SQLException e){
             System.err.println(e);
-            return null;
+            return false;
         }
+        
     }
-
+    
+    
     @Override
     public boolean update(FoodItem t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

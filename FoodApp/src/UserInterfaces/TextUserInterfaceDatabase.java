@@ -78,6 +78,10 @@ public class TextUserInterfaceDatabase {
                 this.search();
                 break;
                 
+            case "update":
+                this.update();
+                break;
+                
             case "help":
                 displayMenu();
                 break;
@@ -102,14 +106,13 @@ public class TextUserInterfaceDatabase {
     SORT FOODS
     */
     public boolean sortFoods(){
-        String[] params = sortFoodsGetInput();
-        if (params == null){
-            //do something; escape clause
-            System.out.println("it's null bruv");
+        String[] criteriaAndOrder = sortFoodsGetInput();
+        
+        if (criteriaAndOrder == null){
             return false;
         }
         
-        List<FoodItem> sortedFoods = this.foodDb.sort(params);
+        List<FoodItem> sortedFoods = this.foodDb.sort(criteriaAndOrder);
         
         System.out.println("");
         this.foodDb.printAllFoodsFormatted(sortedFoods);
@@ -123,6 +126,7 @@ public class TextUserInterfaceDatabase {
     */
     public String[] sortFoodsGetInput(){
         System.out.println("Sort by what?");
+        
         for (String stat : this.statsArrShort){
             System.out.print(stat+ " | ");
         }
@@ -137,7 +141,9 @@ public class TextUserInterfaceDatabase {
             System.out.print("Enter choice: ");
             sortCriteria = sc.nextLine().toLowerCase();
             
-            //add escape clause
+            if (userEnteredX(sortCriteria)){
+                return null;
+            }
             
             for (String stat : this.statsArrShort){
                 if (sortCriteria.equals(stat)){
@@ -152,6 +158,7 @@ public class TextUserInterfaceDatabase {
             
         }
         
+        //user input matches SQL file column names in all cases but ss
         if (sortCriteria.equals("ss")){
             sortCriteria = "servingsize";
         }
@@ -161,6 +168,9 @@ public class TextUserInterfaceDatabase {
         while (!(order.equals("asc") || order.equals("desc"))){
             System.out.print("Ascending or descending? (enter asc or desc): ");
             order = sc.nextLine().toLowerCase();
+            if (userEnteredX(order)){
+                return null;
+            }
             
             if (!(order.equals("asc") || order.equals("desc"))){
                 System.out.println("Invalid entry. Please try again.\n");
@@ -169,10 +179,10 @@ public class TextUserInterfaceDatabase {
         
         
         
-        String[] returnArr = {sortCriteria, order};
+        String[] criteriaAndOrder = {sortCriteria, order};
         
         
-        return returnArr;
+        return criteriaAndOrder;
     }
     
     /*
@@ -197,6 +207,7 @@ public class TextUserInterfaceDatabase {
     
     /*
     ADD NEW FOOD GET INPUT
+    //TODO: validate format of input (numbers, strings, etc)
     */
     public FoodItem addNewFoodGetInput(){
         FoodItem newFood;
@@ -206,7 +217,14 @@ public class TextUserInterfaceDatabase {
         for (int i = 0; i < this.statsArr.length; i++){
             System.out.print("Enter " +this.statsArr[i]+ ": ");
             String input = sc.nextLine();
-            if (userWantsToLeave(input)){
+            
+            if (input.equalsIgnoreCase("name")){
+                System.out.println("Input can't be name.");
+                i--;
+                continue;
+            }
+            
+            if (userEnteredX(input)){
                 return null;
             }
             
@@ -225,7 +243,7 @@ public class TextUserInterfaceDatabase {
     public void deleteFoodByName(){
         String nameToBeDeleted = deleteFoodGetInput();
         
-        if (nameToBeDeleted == null){
+        if (userEnteredX(nameToBeDeleted)){
             return;
         }
         
@@ -250,9 +268,7 @@ public class TextUserInterfaceDatabase {
     public String deleteFoodGetInput(){
         System.out.print("Enter name of food to delete: ");
         String name = sc.nextLine().toLowerCase();
-        if (userWantsToLeave(name)){
-            return null;
-        }
+        
         return name;
     }
     
@@ -262,7 +278,7 @@ public class TextUserInterfaceDatabase {
     public void search(){
         String keyword = getKeywordFromUser();
         
-        if (keyword == null){
+        if (userEnteredX(keyword)){
             return;
         }
         
@@ -287,17 +303,129 @@ public class TextUserInterfaceDatabase {
         System.out.print("Enter keyword: ");
         String keyword = sc.nextLine();
         
-        if (keyword.equalsIgnoreCase("x")){
-            return null;
-        }
-        
         return keyword;
     }
     
     /*
-    USER WANTS TO LEAVE
+    UPDATE
     */
-    public boolean userWantsToLeave(String input){
+    public void update(){
+        String[] inputsArr = updateGetInput();
+        if (inputsArr == null){
+            return;
+        }
+        
+        String column = inputsArr[0];
+        String newCell = inputsArr[1];
+        String foodName = inputsArr[2];
+        
+        if (this.foodDb.updateFood(column, newCell, foodName)){
+            System.out.println(foodName+ " has been updated.");
+        }
+        
+        else{
+            System.out.println("Something went wrong.");
+        }
+    }
+    
+    /*
+    UPDATE GET INPUT
+    */
+    public String[] updateGetInput(){
+        
+        String foodName = updateGetNameToUpdate();
+        if (userEnteredX(foodName)){
+            return null;
+        }
+        
+        String statChoice = updateGetStatChoice();
+        if (userEnteredX(statChoice)){
+            return null;
+        }
+        
+        
+        String newStat = updateGetNewStat(statChoice);
+        if (userEnteredX(newStat)){
+            return null;
+        }
+        
+        String[] inputsArr = {statChoice, newStat, foodName};
+        return inputsArr;
+    }
+    
+    /*
+    UPDATE GET NAME TO UPDATE
+    */
+    public String updateGetNameToUpdate(){
+        boolean foodExists = false;
+        String foodName = "";
+        
+        while (!foodExists){
+            System.out.print("Enter name of food to update: ");
+            foodName = sc.nextLine();
+            
+            if (userEnteredX(foodName)){
+                return "x";
+            }
+            
+            foodExists = this.foodDb.foodAlreadyExists(foodName);
+            
+            if (!foodExists){
+                System.out.println("\nERROR: " +foodName+ " doesn't exist!\n");
+            }
+        }
+        System.out.println("returning foodName: " +foodName); //testing
+        return foodName;
+    }
+    
+    /*
+    UPDATE GET STAT CHOICE
+    */
+    public String updateGetStatChoice(){
+        String statChoice = "";
+        boolean isStatChoiceValid = false;
+        
+        while (!isStatChoiceValid){
+            System.out.println("\nWhat would you like to update?");
+            for (String stat : statsArrShort){
+                System.out.print(stat+ " | ");
+            }
+            
+            System.out.print("\n\nEnter which: ");
+            statChoice = sc.nextLine().toLowerCase();
+            
+            if (userEnteredX(statChoice)){
+                return "x";
+            }
+            
+            for (String stat : statsArrShort){
+                if (stat.equals(statChoice)){
+                    isStatChoiceValid = true;
+                    break;
+                }
+            }
+            if (!isStatChoiceValid){
+                System.out.println("\nInvalid input. Please try again.");
+            }
+        }
+        
+        return statChoice;
+    }
+    
+    /*
+    UPDATE GET NEW STAT
+    TODO: validate format of input (number vs string, etc)
+    */
+    public String updateGetNewStat(String statChoice){
+        System.out.print("Enter new " +statChoice+ ": ");
+        String newStat = sc.nextLine();
+        return newStat;
+    }
+    
+    /*
+    USER ENTERED X
+    */
+    public boolean userEnteredX(String input){
          return input.equalsIgnoreCase("x");
     }
 }
