@@ -196,6 +196,7 @@ public class TextUserInterfaceDatabase {
         }
         
         
+        
         if (foodDb.add(newFood)){
             System.out.println("\n" +newFood.getName()+ " has been added.\n");
         }
@@ -227,6 +228,19 @@ public class TextUserInterfaceDatabase {
             if (userEnteredX(input)){
                 return null;
             }
+            
+            //indices 0 and 2 are the only ones that can be Strings
+            //rest need to be numbers
+            if (i == 1 || i > 2){ 
+                try{
+                    int tryInt = Integer.parseInt(input);
+                } catch (NumberFormatException e){
+                    System.out.println("\nERROR: Please enter a number.\n");
+                    i--;
+                    continue;
+                }
+            }
+            
             
             inputsArr[i] = input;
         }
@@ -419,6 +433,21 @@ public class TextUserInterfaceDatabase {
     public String updateGetNewStat(String statChoice){
         System.out.print("Enter new " +statChoice+ ": ");
         String newStat = sc.nextLine();
+        
+        if (userEnteredX(newStat)){
+            return "x";
+        }
+        
+        if (!(statChoice.equals("name") || statChoice.equals("unit"))){
+            try{
+                Integer.parseInt(newStat);
+            } catch (NumberFormatException e){
+                System.out.println("\nERROR: Please enter a number\n");
+                return updateGetNewStat(statChoice);
+            }
+        }
+        
+        
         return newStat;
     }
     

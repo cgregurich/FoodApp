@@ -314,6 +314,10 @@ public class FoodDB implements DAO<FoodItem> {
     UPDATE FOOD
     */
     public boolean updateFood(String column, String newCell, String foodName){
+        if (column.equals("ss")){
+            column = "servingsize";
+        }
+        
         String query = "UPDATE " +TABLE_NAME+ ""
                 + " SET " +column+ " = ?"
                 + " WHERE name = ?";
@@ -328,6 +332,7 @@ public class FoodDB implements DAO<FoodItem> {
             return true;
         } catch (SQLException e){
             System.err.println(e);
+            
             return false;
         }
         
