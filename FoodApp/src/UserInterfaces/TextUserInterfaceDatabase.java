@@ -423,6 +423,7 @@ public class TextUserInterfaceDatabase {
             }
         }
         
+        
         return statChoice;
     }
     

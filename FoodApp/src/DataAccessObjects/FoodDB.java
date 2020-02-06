@@ -332,7 +332,6 @@ public class FoodDB implements DAO<FoodItem> {
             return true;
         } catch (SQLException e){
             System.err.println(e);
-            
             return false;
         }
         
